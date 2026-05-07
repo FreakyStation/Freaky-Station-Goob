@@ -50,6 +50,7 @@ public sealed class DailyRewardSystem : EntitySystem
         SubscribeNetworkEvent<DailyRewardClaimRequestEvent>(OnClaimRequest);
 
         _userDb.AddOnLoadPlayer(LoadPlayerData);
+        _userDb.AddOnFinishLoad(OnPlayerDataLoaded);
         _userDb.AddOnPlayerDisconnect(OnPlayerDisconnect);
     }
 
@@ -194,6 +195,15 @@ public sealed class DailyRewardSystem : EntitySystem
             _ = _db.UpsertDailyRewardProgress(state.Progress);
 
         _states.Remove(player.UserId);
+    }
+
+    private void OnPlayerDataLoaded(ICommonSession player)
+    {
+        if (!_states.ContainsKey(player.UserId))
+            EnsureStateExists(player.UserId);
+
+        StartTracking(player);
+        SendState(player);
     }
 
     private void OnPlayerSpawnComplete(PlayerSpawnCompleteEvent ev)
@@ -515,6 +525,11 @@ public sealed class DailyRewardSystem : EntitySystem
             return existing;
 
         if (!_playerManager.TryGetSessionById(userId, out var session))
+            return null;
+
+        // Don't create placeholder progress before DB callbacks complete.
+        // Otherwise a quick disconnect/restart can persist a zeroed streak over real data.
+        if (!_userDb.IsLoadComplete(session))
             return null;
 
         var state = new SessionRewardState(new DailyRewardProgress
