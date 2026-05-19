@@ -5,6 +5,7 @@ using Content.Shared.Hands.EntitySystems;
 using Content.Shared.IdentityManagement;
 using Content.Shared.Interaction;
 using Content.Shared.Popups;
+using Robust.Shared.GameStates;
 using Robust.Shared.Timing;
 
 namespace Content.Shared._CorvaxGoob.OfferItem;
@@ -21,12 +22,39 @@ public abstract partial class SharedOfferItemSystem : EntitySystem
 
     public override void Initialize()
     {
+        SubscribeLocalEvent<OfferItemComponent, ComponentGetState>(OnGetState);
+        SubscribeLocalEvent<OfferItemComponent, ComponentHandleState>(OnHandleState);
         SubscribeLocalEvent<OfferItemComponent, InteractUsingEvent>(SetInReceiveMode);
         SubscribeLocalEvent<OfferItemComponent, MoveEvent>(OnMove);
 
         InitializeInteractions();
 
         SubscribeLocalEvent<OfferItemComponent, AcceptOfferAlertEvent>(OnClickAlertEvent);
+    }
+
+    private void OnGetState(EntityUid uid, OfferItemComponent component, ref ComponentGetState args)
+    {
+        TryGetNetEntity(component.Item, out var item);
+        TryGetNetEntity(component.Target, out var target);
+
+        args.State = new OfferItemComponentState(
+            component.IsInOfferMode,
+            component.IsInReceiveMode,
+            component.Hand,
+            item,
+            target);
+    }
+
+    private void OnHandleState(EntityUid uid, OfferItemComponent component, ref ComponentHandleState args)
+    {
+        if (args.Current is not OfferItemComponentState state)
+            return;
+
+        component.IsInOfferMode = state.IsInOfferMode;
+        component.IsInReceiveMode = state.IsInReceiveMode;
+        component.Hand = state.Hand;
+        component.Item = TryGetEntity(state.Item, out var item) ? item : null;
+        component.Target = TryGetEntity(state.Target, out var target) ? target : null;
     }
 
     private void OnClickAlertEvent(Entity<OfferItemComponent> ent, ref AcceptOfferAlertEvent ev)
