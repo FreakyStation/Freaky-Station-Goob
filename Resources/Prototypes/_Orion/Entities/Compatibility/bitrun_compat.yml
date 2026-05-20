@@ -56,5 +56,13 @@
   id: DoubleBedsheetClown
 
 - type: entity
+  parent: WeaponSniperHristov
+  id: WeaponRifleDragunov
+
+- type: entity
+  parent: MagazineAntiMateriel
+  id: MagazineRifle762Sniper
+
+- type: entity
   parent: SuitStorageEVA
   id: SuitStorageExplorerSuit
