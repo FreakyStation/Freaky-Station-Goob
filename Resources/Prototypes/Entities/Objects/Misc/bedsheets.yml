@@ -466,3 +466,11 @@
     state: sheetyellow
   - type: Clothing
     sprite: Clothing/Neck/Bedsheets/yellow.rsi
+
+- type: entity
+  id: DoubleBedsheetBlack
+  parent: BedsheetBlack
+
+- type: entity
+  id: DoubleBedsheetIan
+  parent: BedsheetIan

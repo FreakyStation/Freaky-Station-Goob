@@ -133,3 +133,13 @@
   - type: Loadout
     prototypes: [LimitedPassengerGear]
   - type: RandomHumanoidAppearance
+
+- type: entity
+  id: MobSkeletonBartender
+  name: skeleton bartender
+  parent: MobSkeletonPerson
+  components:
+  - type: Loadout
+    prototypes: [VisitorBartender, VisitorBartenderAlt]
+    roleLoadout: [RoleSurvivalStandard]
+  - type: RandomHumanoidAppearance
