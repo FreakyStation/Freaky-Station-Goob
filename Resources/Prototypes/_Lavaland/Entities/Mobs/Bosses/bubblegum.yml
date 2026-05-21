@@ -12,22 +12,22 @@
     fixtures:
       fix1:
         shape:
-          !type:PhysShapeAabb
-          bounds: "-1,-2,1,1"
-        density: 1000
+          !type:PhysShapeCircle
+          radius: 0.75
+        density: 320
         mask:
-        - LargeMobMask
+        - MobMask
         layer:
-        - LargeMobLayer
+        - MobLayer
   - type: NpcFactionMember
     factions:
     - SimpleHostile
   - type: HTN
     rootTask:
-      task: SimpleHostileCompound
+      task: IdleCompound
   - type: Sprite
     drawdepth: Mobs
-    sprite: _Lavaland/Mobs/Bosses/96x96.rsi
+    sprite: _Lavaland/Mobs/Bubblegum.rsi
     layers:
     - map: ["enum.DamageStateVisualLayers.Base"]
       state: bubblegum
@@ -35,22 +35,21 @@
     altDisarm: false
     angle: 0
     soundHit:
-      path: /Audio/Effects/demon_attack1.ogg
+      path: /Audio/_Lavaland/Mobs/Bosses/Bubblegum/demon_attack1.ogg
     animation: WeaponArcBite
+    attackRate: 0.8
     damage:
-        types:
-          Piercing: 15
-          Slash: 15
-          Blunt: 15
-          Structural: 200
+      types:
+        Slash: 40
+        Structural: 40
   - type: Tag
     tags:
     - CannotSuicide
     - FootstepSound
   - type: CombatMode
   - type: MovementSpeedModifier
-    baseWalkSpeed: 4
-    baseSprintSpeed: 4
+    baseWalkSpeed: 2
+    baseSprintSpeed: 3
   - type: MobThresholds
     thresholds:
       0: Alive
@@ -58,6 +57,14 @@
   - type: Damageable
     damageContainer: Inorganic
     damageModifierSet: Hierophant
+  - type: Destructible
+    thresholds:
+    - trigger:
+        !type:DamageTypeTrigger
+        damageType: Blunt
+        damage: 1000000
+      behaviors:
+      - !type:GibBehavior { }
   - type: FootstepModifier
     footstepSoundCollection:
       collection: BossImpactFootstep
@@ -66,7 +73,16 @@
   - type: TileMovement
   - type: BossMusic
     soundId: Bubblegum
-  - type: Aggressive # also required component for aggro checking
-    forgiveRange: 20.0
-  - type: CombatPower # Goobstation
-    factor: 25 # times more dangerous than a crew-member
+  - type: Aggressive
+    autoAddOnDamage: false
+    forgiveRange: 40.0
+  - type: CombatPower
+    factor: 25
+  - type: Bubblegum
+  - type: SpawnLootOnDeath
+    table: !type:AllSelector
+      children:
+      - id: OrganSlaughterHeart
+    deleteOnDeath: true
+  - type: NoSlip
+  - type: RequireProjectileTarget

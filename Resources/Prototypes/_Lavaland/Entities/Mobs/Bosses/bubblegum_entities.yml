@@ -1,0 +1,232 @@
+- type: entity
+  id: LavalandBubblegumEffectBase
+  abstract: true
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: Transform
+    anchored: true
+    noRot: true
+  - type: Physics
+    bodyType: Static
+    canCollide: false
+  - type: Tag
+    tags:
+    - HideContextMenu
+  - type: TimedDespawn
+    lifetime: 1
+
+- type: entity
+  parent: LavalandBubblegumEffectBase
+  id: LavalandBubblegumBloodSplatter
+  name: bubblegum blood splatter
+  components:
+  - type: Sprite
+    noRot: true
+    drawdepth: FloorObjects
+    sprite: _Lavaland/Effects/BubblegumBlood.rsi
+    layers:
+    - state: splatter1
+      shader: unshaded
+  - type: RandomSprite
+    available:
+    - 0:
+        splatter1: ""
+        splatter2: ""
+        splatter3: ""
+        splatter4: ""
+        splatter5: ""
+        splatter6: ""
+  - type: TimedDespawn
+    lifetime: 1.2
+
+- type: entity
+  parent: LavalandBubblegumEffectBase
+  id: LavalandBubblegumBloodGibs
+  name: bubblegum blood gibs
+  components:
+  - type: Sprite
+    noRot: true
+    drawdepth: FloorObjects
+    sprite: _Lavaland/Effects/BubblegumBlood.rsi
+    layers:
+    - state: gib3
+  - type: RandomSprite
+    available:
+    - 0:
+        gib3: ""
+        gib5: ""
+        gib6: ""
+  - type: TimedDespawn
+    lifetime: 45
+
+- type: entity
+  parent: LavalandBubblegumEffectBase
+  id: LavalandBubblegumLanding
+  name: bubblegum landing
+  components:
+  - type: Sprite
+    noRot: true
+    drawdepth: Effects
+    sprite: _Lavaland/Effects/BubblegumLanding.rsi
+    color: "#ff1f1f"
+    layers:
+    - state: landing
+  - type: TimedDespawn
+    lifetime: 0.9
+  - type: PointLight
+    radius: 4
+    energy: 1.6
+    color: "#ff3030"
+
+- type: entity
+  parent: LavalandBubblegumEffectBase
+  id: LavalandBubblegumRightSmack
+  name: bubblegum right smack
+  components:
+  - type: Sprite
+    noRot: true
+    drawdepth: Effects
+    sprite: _Lavaland/Effects/BubblegumHands.rsi
+    layers:
+    - state: rightsmack
+  - type: TimedDespawn
+    lifetime: 1.1
+
+- type: entity
+  parent: LavalandBubblegumEffectBase
+  id: LavalandBubblegumLeftSmack
+  name: bubblegum left smack
+  components:
+  - type: Sprite
+    noRot: true
+    drawdepth: Effects
+    sprite: _Lavaland/Effects/BubblegumHands.rsi
+    layers:
+    - state: leftsmack
+  - type: TimedDespawn
+    lifetime: 1.1
+
+- type: entity
+  parent: LavalandBubblegumEffectBase
+  id: LavalandBubblegumRightPaw
+  name: bubblegum right paw
+  components:
+  - type: Sprite
+    noRot: true
+    drawdepth: BelowMobs
+    sprite: _Lavaland/Effects/BubblegumHands.rsi
+    layers:
+    - state: rightpawgrab
+  - type: TimedDespawn
+    lifetime: 1.2
+
+- type: entity
+  parent: LavalandBubblegumEffectBase
+  id: LavalandBubblegumLeftPaw
+  name: bubblegum left paw
+  components:
+  - type: Sprite
+    noRot: true
+    drawdepth: BelowMobs
+    sprite: _Lavaland/Effects/BubblegumHands.rsi
+    layers:
+    - state: leftpawgrab
+  - type: TimedDespawn
+    lifetime: 1.2
+
+- type: entity
+  parent: LavalandBubblegumEffectBase
+  id: LavalandBubblegumRightThumb
+  name: bubblegum right thumb
+  components:
+  - type: Sprite
+    noRot: true
+    drawdepth: Effects
+    sprite: _Lavaland/Effects/BubblegumHands.rsi
+    layers:
+    - state: rightthumbgrab
+  - type: TimedDespawn
+    lifetime: 1.2
+
+- type: entity
+  parent: LavalandBubblegumEffectBase
+  id: LavalandBubblegumLeftThumb
+  name: bubblegum left thumb
+  components:
+  - type: Sprite
+    noRot: true
+    drawdepth: Effects
+    sprite: _Lavaland/Effects/BubblegumHands.rsi
+    layers:
+    - state: leftthumbgrab
+  - type: TimedDespawn
+    lifetime: 1.2
+
+- type: entity
+  id: LavalandBubblegumClone
+  name: bubblegum
+  suffix: Fake
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: Transform
+    noRot: true
+  - type: Sprite
+    drawdepth: Mobs
+    sprite: _Lavaland/Mobs/Bubblegum.rsi
+    color: "#ff4d4db8"
+    layers:
+    - state: bubblegum
+      shader: unshaded
+  - type: TimedDespawn
+    lifetime: 6
+  - type: Tag
+    tags:
+    - HideContextMenu
+
+- type: entity
+  parent: [ BaseMobAsteroid, FlyingMobBase, LavalandMobBase ]
+  id: MobLavalandBubblegumSlaughterling
+  name: slaughterling
+  description: A half-formed demon crawling out of Bubblegum's blood.
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: Sprite
+    drawdepth: Mobs
+    sprite: _Lavaland/Mobs/Bloodbrood.rsi
+    layers:
+    - state: bloodbrood
+  - type: MobThresholds
+    thresholds:
+      0: Alive
+      1: Dead
+  - type: MovementSpeedModifier
+    baseWalkSpeed: 3
+    baseSprintSpeed: 3.5
+  - type: MeleeWeapon
+    soundHit:
+      path: /Audio/_Lavaland/Mobs/Bosses/Bubblegum/pierce.ogg
+    angle: 0
+    attackRate: 1.2
+    animation: WeaponArcBite
+    damage:
+      types:
+        Piercing: 2
+  - type: NpcFactionMember
+    factions:
+    - SimpleHostile
+  - type: HTN
+    rootTask:
+      task: SimpleHostileCompound
+    blackboard:
+      VisionRadius: !type:Single
+        32
+      AggroVisionRadius: !type:Single
+        32
+      NavSmash: !type:Bool
+        false
+  - type: TimedDespawn
+    lifetime: 10
+  - type: NoSlip
+  - type: Tag
+    tags:
+    - CannotSuicide

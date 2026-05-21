@@ -10,3 +10,17 @@
   - type: ConditionalSpawner
     prototypes:
     - MobHierophant
+
+- type: entity
+  parent: MarkerBase
+  id: SpawnMobBubblegum
+  name: Bubblegum Spawner
+  categories: [ Spawner ]
+  components:
+  - type: Sprite
+    layers:
+    - state: green
+    - state: ai
+  - type: ConditionalSpawner
+    prototypes:
+    - LavalandBossBubblegum

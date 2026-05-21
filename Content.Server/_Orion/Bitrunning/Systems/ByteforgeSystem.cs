@@ -207,19 +207,38 @@ public sealed class ByteforgeSystem : EntitySystem
 
     public bool TryFillRewardCacheWithLoot(EntityUid cargoUid, QuantumServerComponent server)
     {
-        var tableId = GetDifficultyLootTable(server);
-        if (!_prototype.TryIndex(tableId, out var table))
-            return false;
-
         var coordinates = Transform(cargoUid).Coordinates;
         var insertedAny = false;
+
+        if (server.CurrentDomain != null &&
+            _domains.TryGetDomain(server.CurrentDomain, out var domain))
+        {
+            foreach (var (prototypeId, amount) in domain.CompletionLoot)
+            {
+                for (var i = 0; i < amount; i++)
+                {
+                    var loot = Spawn(prototypeId, coordinates);
+
+                    if (TryInsertLoot(cargoUid, loot))
+                    {
+                        insertedAny = true;
+                        continue;
+                    }
+
+                    QueueDel(loot);
+                }
+            }
+        }
+
+        var tableId = GetDifficultyLootTable(server);
+        if (!_prototype.TryIndex(tableId, out var table))
+            return insertedAny;
+
         foreach (var prototypeId in _entityTable.GetSpawns(table))
         {
             var loot = Spawn(prototypeId, coordinates);
 
-            if (TryComp<StorageComponent>(cargoUid, out var storage) &&
-                _storage.Insert(cargoUid, loot, out _, storageComp: storage, playSound: false) || TryComp<EntityStorageComponent>(cargoUid, out var entityStorage) &&
-                _entityStorage.Insert(loot, cargoUid, entityStorage))
+            if (TryInsertLoot(cargoUid, loot))
             {
                 insertedAny = true;
                 continue;
@@ -229,6 +248,16 @@ public sealed class ByteforgeSystem : EntitySystem
         }
 
         return insertedAny;
+    }
+
+    private bool TryInsertLoot(EntityUid cargoUid, EntityUid loot)
+    {
+        if (TryComp<StorageComponent>(cargoUid, out var storage) &&
+            _storage.Insert(cargoUid, loot, out _, storageComp: storage, playSound: false))
+            return true;
+
+        return TryComp<EntityStorageComponent>(cargoUid, out var entityStorage) &&
+               _entityStorage.Insert(loot, cargoUid, entityStorage);
     }
 
     private ProtoId<EntityTablePrototype> GetDifficultyLootTable(QuantumServerComponent server)

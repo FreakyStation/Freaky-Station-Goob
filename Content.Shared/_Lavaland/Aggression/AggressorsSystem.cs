@@ -98,6 +98,9 @@ public sealed class AggressorsSystem : EntitySystem
 
     private void OnDamageChanged(Entity<AggressiveComponent> ent, ref DamageChangedEvent args)
     {
+        if (!ent.Comp.AutoAddOnDamage)
+            return;
+
         var aggro = args.Origin;
 
         if (aggro == null

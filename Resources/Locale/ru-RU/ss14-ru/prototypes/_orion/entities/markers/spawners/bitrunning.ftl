@@ -26,6 +26,7 @@ ent-BitrunningEncryptedCacheObjectiveSpawner = спавнер зашифрова
 ent-SpawnMobHierophantBitrunning = спавнер иерофанта
     .suffix = Битраннинг
     .desc = { ent-MarkerBase.desc }
+
 ent-SpawnMobReindeerBuckBitrunning = спавнер северного оленя (самец)
     .suffix = Битраннинг
     .desc = { ent-MarkerBase.desc }

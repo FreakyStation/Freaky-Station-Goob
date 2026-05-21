@@ -48,4 +48,10 @@ public sealed partial class AggressiveComponent : Component
 
     [DataField]
     public TimeSpan UpdateDelay = TimeSpan.FromSeconds(10f);
+
+    /// <summary>
+    /// If false, aggressors are only added manually (e.g. Bubblegum blood step / custom rules).
+    /// </summary>
+    [DataField]
+    public bool AutoAddOnDamage = true;
 }
