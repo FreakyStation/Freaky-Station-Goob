@@ -65,6 +65,8 @@ public sealed class SkillTrainingSystem : EntitySystem
 
     private const int SelfStudyMaxDelay = 90;
 
+    private const float TrainingCooldownSeconds = 60f;
+
 
 
     [Dependency] private readonly SkillsSystem _skills = default!;
@@ -411,7 +413,13 @@ public sealed class SkillTrainingSystem : EntitySystem
 
         if (args.Cancelled)
 
+        {
+
+            ClearActiveTraining(args.User);
+
             return;
+
+        }
 
 
 
@@ -475,6 +483,20 @@ public sealed class SkillTrainingSystem : EntitySystem
 
 
 
+        var session = target ?? user;
+
+        if (!CanStartTrainingSession(user, session, out var sessionFail))
+
+        {
+
+            _popup.PopupEntity(Loc.GetString(sessionFail), user, user);
+
+            return;
+
+        }
+
+
+
         var readEv = new SkillBookReadDoAfterEvent
 
         {
@@ -499,7 +521,7 @@ public sealed class SkillTrainingSystem : EntitySystem
 
 
 
-        if (!TryStartDoAfterOrNotify(user, doAfterArgs))
+        if (!TryBeginTrainingDoAfter(user, session, doAfterArgs))
 
             return;
 
@@ -514,6 +536,18 @@ public sealed class SkillTrainingSystem : EntitySystem
     private void TryStartExpertTeach(EntityUid teacher, EntityUid student, SkillTypes skill)
 
     {
+
+        if (!CanStartTrainingSession(teacher, student, out var sessionFail))
+
+        {
+
+            _popup.PopupEntity(Loc.GetString(sessionFail), teacher, teacher);
+
+            return;
+
+        }
+
+
 
         if (!CanTeachWithoutBook(teacher, skill, out var fail))
 
@@ -547,11 +581,27 @@ public sealed class SkillTrainingSystem : EntitySystem
 
 
 
+        if (!CanStartTrainingSession(teacher, student, out var sessionFail))
+
+        {
+
+            _popup.PopupEntity(Loc.GetString(sessionFail), teacher, teacher);
+
+            ClearActiveTraining(teacher);
+
+            return;
+
+        }
+
+
+
         if (!TryResolveTrainingMode(teacher, skill, out var mode, out var fail))
 
         {
 
             _popup.PopupEntity(fail, teacher, teacher);
+
+            ClearActiveTraining(teacher);
 
             return;
 
@@ -603,6 +653,8 @@ public sealed class SkillTrainingSystem : EntitySystem
 
             RemComp<SkillTrainingStudentComponent>(user);
 
+            ClearActiveTraining(user);
+
             return;
 
         }
@@ -633,7 +685,19 @@ public sealed class SkillTrainingSystem : EntitySystem
 
     {
 
-        if (args.Cancelled || ent.Comp.Mode == SkillTrainingMode.SelfStudy)
+        if (args.Cancelled)
+
+        {
+
+            ClearActiveTraining(args.User);
+
+            return;
+
+        }
+
+
+
+        if (ent.Comp.Mode == SkillTrainingMode.SelfStudy)
 
             return;
 
@@ -675,6 +739,14 @@ public sealed class SkillTrainingSystem : EntitySystem
 
 
 
+        if (student != args.User)
+
+            ApplyTrainingCooldown(args.User);
+
+        else
+
+            ClearActiveTraining(args.User);
+
         CompleteTraining(student, ent.Comp.Skill);
 
         RemComp<SkillTrainingStudentComponent>(student);
@@ -698,43 +770,99 @@ public sealed class SkillTrainingSystem : EntitySystem
 
 
 
-        if (!TryStartDoAfterOrNotify(teacher, args))
+        if (!TryBeginTrainingDoAfter(teacher, student, args))
+
+        {
 
             RemComp<SkillTrainingStudentComponent>(student);
+
+            ClearActiveTraining(teacher);
+
+        }
 
     }
 
     private void ApplyTeachingDoAfterRules(DoAfterArgs args)
     {
         args.RequireCanInteract = false;
-        // DoAfter applies DistanceThreshold to Used as well; held items fail InRangeUnobstructed.
         args.DistanceThreshold = args.Target != null ? TrainingInteractionRange : null;
-        args.BlockDuplicate = false;
-        args.CancelDuplicate = true;
+        args.BlockDuplicate = true;
+        args.CancelDuplicate = false;
+        args.DuplicateCondition = DuplicateConditions.All;
     }
 
-    private bool TryStartDoAfterOrNotify(EntityUid user, DoAfterArgs args)
+    private bool CanStartTrainingSession(EntityUid teacher, EntityUid sessionEntity, out string failLocale)
     {
+        failLocale = "skill-training-fail-busy";
+        var comp = EnsureComp<SkillTrainingTeacherComponent>(teacher);
+
+        if (_timing.CurTime < comp.CooldownUntil)
+        {
+            failLocale = "skill-training-fail-cooldown";
+            return false;
+        }
+
+        if (HasComp<ActiveDoAfterComponent>(teacher))
+            return false;
+
+        if (comp.ActiveStudent is { } active
+            && TryGetEntity(active, out var activeEntity)
+            && activeEntity != sessionEntity)
+            return false;
+
+        return true;
+    }
+
+    private bool TryBeginTrainingDoAfter(EntityUid teacher, EntityUid sessionEntity, DoAfterArgs args)
+    {
+        if (!CanStartTrainingSession(teacher, sessionEntity, out var failLocale))
+        {
+            _popup.PopupEntity(Loc.GetString(failLocale), teacher, teacher);
+            return false;
+        }
+
         ApplyTeachingDoAfterRules(args);
 
         if (args.Target != null
-            && !_interaction.InRangeUnobstructed(user, args.Target.Value, TrainingInteractionRange))
+            && !_interaction.InRangeUnobstructed(teacher, args.Target.Value, TrainingInteractionRange))
         {
-            _popup.PopupEntity(Loc.GetString("skill-training-fail-range"), user, user);
+            _popup.PopupEntity(Loc.GetString("skill-training-fail-range"), teacher, teacher);
             return false;
         }
 
-        if (args.NeedHand && !TryComp<HandsComponent>(user, out _))
+        if (args.NeedHand && !TryComp<HandsComponent>(teacher, out _))
         {
-            _popup.PopupEntity(Loc.GetString("skill-training-fail-hands"), user, user);
+            _popup.PopupEntity(Loc.GetString("skill-training-fail-hands"), teacher, teacher);
             return false;
         }
 
-        if (_doAfter.TryStartDoAfter(args))
-            return true;
+        if (!_doAfter.TryStartDoAfter(args))
+        {
+            _popup.PopupEntity(Loc.GetString("skill-training-fail-busy"), teacher, teacher);
+            return false;
+        }
 
-        _popup.PopupEntity(Loc.GetString("skill-training-fail-busy"), user, user);
-        return false;
+        var comp = EnsureComp<SkillTrainingTeacherComponent>(teacher);
+        comp.ActiveStudent = GetNetEntity(sessionEntity);
+        Dirty(teacher, comp);
+        return true;
+    }
+
+    private void ClearActiveTraining(EntityUid teacher)
+    {
+        if (!TryComp<SkillTrainingTeacherComponent>(teacher, out var comp) || comp.ActiveStudent == null)
+            return;
+
+        comp.ActiveStudent = null;
+        Dirty(teacher, comp);
+    }
+
+    private void ApplyTrainingCooldown(EntityUid teacher)
+    {
+        var comp = EnsureComp<SkillTrainingTeacherComponent>(teacher);
+        comp.CooldownUntil = _timing.CurTime + TimeSpan.FromSeconds(TrainingCooldownSeconds);
+        comp.ActiveStudent = null;
+        Dirty(teacher, comp);
     }
 
 
