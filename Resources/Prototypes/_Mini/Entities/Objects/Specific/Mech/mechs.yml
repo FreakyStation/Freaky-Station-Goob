@@ -1,0 +1,50 @@
+- type: entity
+  id: MechTypanRipley
+  parent: BaseMech
+  name: blood-red Ripley
+  description: A lightly armored mech in the Typan blood-red livery, built on the Ripley MK-II frame for heavy-duty work.
+  suffix: Typan
+  components:
+  - type: Sprite
+    drawdepth: Mobs
+    noRot: true
+    sprite: _Mini/Objects/Specific/Mech/mecha.rsi
+    layers:
+    - map: [ "enum.MechVisualLayers.Base" ]
+      state: bloodredripley
+  - type: FootstepModifier
+    footstepSoundCollection:
+      path: /Audio/Mecha/sound_mecha_powerloader_step.ogg
+  - type: Mech
+    baseState: bloodredripley
+    openState: bloodredripley-open
+    brokenState: bloodredripley-broken
+    mechToPilotDamageMultiplier: 0.75
+    pilotWhitelist:
+      components:
+      - HumanoidAppearance
+    equipmentWhitelist:
+      tags:
+      - TypanRipleyEquipment
+  - type: MeleeWeapon
+    hidden: true
+    attackRate: 1
+    damage:
+      types:
+        Blunt: 28
+  - type: MovementSpeedModifier
+    baseWalkSpeed: 2.25
+    baseSprintSpeed: 3.6
+  - type: Damageable
+    damageContainer: Inorganic
+    damageModifierSet: StrongMetallic
+
+- type: entity
+  id: MechTypanRipleyBattery
+  parent: MechTypanRipley
+  suffix: Typan, Battery
+  components:
+  - type: ContainerFill
+    containers:
+      mech-battery-slot:
+      - PowerCellHigh

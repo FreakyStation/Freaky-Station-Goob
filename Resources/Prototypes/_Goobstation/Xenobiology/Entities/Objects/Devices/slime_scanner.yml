@@ -1,0 +1,19 @@
+- type: entity
+  parent: BaseItem
+  id: SlimeScannerXenobio
+  name: сканер слизней
+  description: Применение на слизне и его продуктах предоставит вам всю необходимую информацию. Обязателен для любого ксенобиолога!
+  components:
+  - type: SlimeScanner
+  - type: Sprite
+    noRot: true
+    sprite: _Goobstation/Xenobiology/Specific/Xenobiology/slime_scanner.rsi
+    drawdepth: HighFloorObjects
+    layers:
+    - state: icon
+    - state: analyzer
+      shader: unshaded
+      visible: true
+  - type: Item
+    heldPrefix: analyzer
+    storedRotation: -90

@@ -1,0 +1,12 @@
+<DefaultWindow
+    xmlns="https://spacestation14.io"
+    Title="{Loc 'character-blocked-gui'}"
+    MinSize="300 120"
+    SetSize="300 120">
+    <BoxContainer Orientation="Vertical" HorizontalExpand="True" VerticalExpand="True">
+        <RichTextLabel
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"
+            Text="{Loc 'character-blocked-gui-text'}" />
+    </BoxContainer>
+</DefaultWindow>

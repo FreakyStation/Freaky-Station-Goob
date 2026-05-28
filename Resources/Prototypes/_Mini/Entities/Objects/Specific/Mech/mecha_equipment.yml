@@ -1,0 +1,24 @@
+- type: entity
+  id: MechEquipmentTypanRipleyGrabber
+  parent: BaseMechEquipment
+  name: blood-red hydraulic clamp
+  description: A hydraulic clamp adapted for the blood-red Ripley. It trades finesse for hauling capacity.
+  components:
+  - type: Sprite
+    sprite: _Mini/Objects/Specific/Mech/mecha_equipment.rsi
+    state: mecha_clamp
+  - type: Item
+    sprite: _Mini/Objects/Specific/Mech/mecha_equipment.rsi
+    size: Ginormous
+  - type: MechGrabber
+    maxContents: 20
+    grabDelay: 1.5
+    grabEnergyDelta: -50
+  - type: UIFragment
+    ui: !type:MechGrabberUi
+  - type: ContainerContainer
+    containers:
+      item-container: !type:Container
+  - type: Tag
+    tags:
+    - TypanRipleyEquipment

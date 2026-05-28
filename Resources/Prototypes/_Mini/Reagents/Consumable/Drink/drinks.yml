@@ -1,0 +1,8 @@
+- type: reagent
+  id: Kumis
+  name: kumis-name
+  parent: BaseDrink
+  desc: kumis-desc
+  physicalDesc: reagent-physical-desc-bubbly
+  flavor: milk
+  color: "#FFFDD0"

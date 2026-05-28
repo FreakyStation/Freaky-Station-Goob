@@ -1,0 +1,35 @@
+- type: playTimeTracker
+  id: JobTypanCommander
+
+- type: playTimeTracker
+  id: JobTypanResearchDirector
+
+- type: playTimeTracker
+  id: JobTypanAtmosTech
+
+- type: playTimeTracker
+  id: JobTypanBotanist
+
+- type: playTimeTracker
+  id: JobTypanCargotech
+
+- type: playTimeTracker
+  id: JobTypanChef
+
+- type: playTimeTracker
+  id: JobTypanMedic
+
+- type: playTimeTracker
+  id: JobTypanScience
+
+- type: playTimeTracker
+  id: JobBorgTypan
+
+- type: playTimeTracker
+  id: JobBorgTypanMedic
+
+- type: playTimeTracker
+  id: JobTypanPatrol
+
+- type: playTimeTracker
+  id: JobTypanTechnician

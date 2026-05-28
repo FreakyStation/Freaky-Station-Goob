@@ -1,0 +1,116 @@
+- type: entity
+  id: ActionHasturDevour
+  name: Поглощение
+  description: Поглощает человека целиком...
+  components:
+  - type: Action
+    useDelay: 150
+    itemIconStyle: BigAction
+    icon:
+      sprite: _Goobstation/Hastur/actions.rsi
+      state: devour
+  - type: TargetAction
+    range: 2
+    deselectOnMiss: true
+  - type: EntityTargetAction
+    canTargetSelf: false
+    whitelist:
+      components:
+      - HumanoidAppearance
+      - Body
+    event: !type:HasturDevourEvent
+
+- type: entity
+  id: ActionHasturLash
+  name: Щупальце
+  description: Атакует цель на расстоянии, сбивая её с ног.
+  components:
+  - type: Action
+    useDelay: 25
+    itemIconStyle: BigAction
+    icon:
+      sprite: _Goobstation/Hastur/actions.rsi
+      state: ranged_tentacle
+  - type: TargetAction
+    range: 10
+    deselectOnMiss: true
+  - type: EntityTargetAction
+    canTargetSelf: false
+    whitelist:
+      components:
+      - HumanoidAppearance
+    event: !type:HasturLashEvent
+
+- type: entity
+  id: ActionInsanityAura
+  name: Аура безумия
+  description: Заставляет всех вокруг вас сходить с ума...
+  components:
+  - type: Action
+    sound: !type:SoundPathSpecifier
+      path: /Audio/_Goobstation/Misc/Hastur/Void_Song.ogg
+    useDelay: 60
+    icon:
+      sprite: _Goobstation/Hastur/actions.rsi
+      state: insanity_aura
+  - type: InstantAction
+    event: !type:InsanityAuraEvent
+
+- type: entity
+  id: ActionMassWhisper
+  name: Массовый шёпот
+  description: Проникает в разум всех существ и нашептывает им безумие...
+  components:
+  - type: Action
+    useDelay: 360
+    icon:
+      sprite: _Goobstation/Hastur/actions.rsi
+      state: mass_whisper
+  - type: InstantAction
+    event: !type:MassWhisperEvent
+
+- type: entity
+  id: ActionVeilOfTheVoid
+  name: Покров пустоты
+  description: Исчезнуть/Вернуться из пустоты, чтобы охотиться за добычей...
+  components:
+  - type: Action
+    useDelay: 25
+    icon:
+      sprite: _Goobstation/Hastur/actions.rsi
+      state: veil_void
+  - type: InstantAction
+    event: !type:VeilOfTheVoidEvent
+
+- type: entity
+  id: ActionOmnipresence
+  name: Вездесущность
+  description: Выберите место, где оказаться. Любое.
+  components:
+  - type: Action
+    useDelay: 60
+    icon:
+      sprite: _Goobstation/Hastur/actions.rsi
+      state: omnipresence
+  - type: InstantAction
+    event: !type:OmnipresenceEvent
+
+- type: entity
+  id: ActionHasturClone
+  name: Клон
+  description: Раздвоиться, оставив позади временную тень своего присутствия.
+  components:
+  - type: Action
+    itemIconStyle: BigAction
+    useDelay: 30
+    icon:
+      sprite: _Goobstation/Hastur/actions.rsi
+      state: clone
+  - type: TargetAction
+    range: 5
+  - type: WorldTargetAction
+    event: !type:WorldSpawnSpellEvent
+      prototypes:
+      - id: MobHasturClone
+        amount: 1
+      offset: 0, 1

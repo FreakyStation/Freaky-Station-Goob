@@ -1,0 +1,108 @@
+- type: ttsVoice
+  id: Aidar
+  name: tts-voice-name-aidar
+  sex: Male
+  speaker: aidar
+
+- type: ttsVoice
+  id: Baya
+  name: tts-voice-name-baya
+  sex: Female
+  speaker: baya
+
+- type: ttsVoice
+  id: Kseniya
+  name: tts-voice-name-kseniya
+  sex: Female
+  speaker: kseniya
+
+- type: ttsVoice
+  id: Xenia
+  name: tts-voice-name-xenia
+  sex: Female
+  speaker: xenia
+
+- type: ttsVoice
+  id: Eugene
+  name: tts-voice-name-eugene
+  sex: Male
+  speaker: eugene
+
+- type: ttsVoice
+  id: Garithos
+  name: tts-voice-name-garithos
+  sex: Male
+  speaker: garithos
+
+- type: ttsVoice
+  id: Maiev
+  name: tts-voice-name-maiev
+  sex: Female
+  speaker: maiev
+
+- type: ttsVoice
+  id: Myron
+  name: Мира
+  sex: Female
+  speaker: myron
+
+- type: ttsVoice
+  id: Oleg
+  name: Даша
+  sex: Female
+  speaker: oleg
+
+- type: ttsVoice
+  id: Zina
+  name: tts-voice-name-zina
+  sex: Female
+  speaker: zina
+
+- type: ttsVoice
+  id: Zanuda
+  name: Зануда
+  sex: Female
+  speaker: zanuda
+
+- type: ttsVoice
+  id: Goga
+  name: Гога
+  sex: Male
+  speaker: goga
+
+- type: ttsVoice
+  id: Zanud
+  name: Нудик
+  sex: Male
+  speaker: zanud
+
+- type: ttsVoice
+  id: Robot
+  name: Робот
+  sex: Male
+  speaker: semen
+  roundStart: false
+
+- type: ttsVoice
+  id: Boyar
+  name: Боярин
+  sex: Male
+  speaker: boyar
+
+- type: ttsVoice
+  id: Vika
+  name: Вика
+  sex: Female
+  speaker: vika
+
+- type: ttsVoice
+  id: Popovich
+  name: Попович
+  sex: Male
+  speaker: popovich
+
+- type: ttsVoice
+  id: Zlata
+  name: Злата
+  sex: Female
+  speaker: zlata

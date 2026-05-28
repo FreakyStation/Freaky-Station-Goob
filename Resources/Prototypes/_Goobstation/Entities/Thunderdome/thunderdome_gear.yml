@@ -1,0 +1,427 @@
+- type: startingGear
+  id: ThunderdomeBaseGear
+  equipment:
+    jumpsuit: ClothingUniformJumpsuitOperative
+    outerClothing: ClothingOuterArmorBasic
+    mask: ClothingMaskGasThunderdome
+    shoes: ClothingShoesBootsCombatFilled
+    gloves: ClothingHandsGlovesCombat
+    belt: ClothingBeltMilitaryWebbing
+    pocket1: WeaponPistolMk58
+    pocket2: MagazinePistol
+  storage:
+    back:
+      - Flash
+
+- type: startingGear
+  id: ThunderdomeShotgun
+  equipment:
+    suitstorage: WeaponShotgunKammerer
+  storage:
+    back:
+      - Flash
+      - BoxLethalshot
+      - BoxShotgunSlug
+
+- type: startingGear
+  id: ThunderdomeDoubleBarreled
+  equipment:
+    suitstorage: WeaponShotgunDoubleBarreled
+  storage:
+    back:
+      - Flash
+      - BoxLethalshot
+      - BoxLethalshot
+
+- type: startingGear
+  id: ThunderdomeSmg
+  equipment:
+    suitstorage: WeaponSubMachineGunDrozd
+  storage:
+    back:
+      - Flash
+      - MagazinePistolSubMachineGun
+      - MagazinePistolSubMachineGun
+
+- type: startingGear
+  id: ThunderdomeWt550
+  equipment:
+    suitstorage: WeaponSubMachineGunWt550
+  storage:
+    back:
+      - Flash
+      - MagazinePistolSubMachineGunTopMounted
+      - MagazinePistolSubMachineGunTopMounted
+
+- type: startingGear
+  id: ThunderdomeLecter
+  equipment:
+    suitstorage: WeaponRifleLecter
+  storage:
+    back:
+      - Flash
+      - MagazineRifle
+      - MagazineRifle
+      - MagazineRifleIncendiary
+
+# - type: startingGear # Мама я люблю сатану
+#   id: ThunderdomeAkms
+#   equipment:
+#     suitstorage: WeaponRifleAk
+#   storage:
+#     back:
+#       - Flash
+#       - MagazineLightRifle
+#       - MagazineLightRifle
+
+- type: startingGear
+  id: ThunderdomePython
+  equipment:
+    suitstorage: WeaponRevolverPythonAP
+  storage:
+    back:
+      - Flash
+      - SpeedLoaderMagnumAP
+
+- type: startingGear
+  id: ThunderdomeInspector
+  equipment:
+    suitstorage: WeaponRevolverInspector
+  storage:
+    back:
+      - Flash
+      - SpeedLoaderMagnum
+      - SpeedLoaderMagnum
+
+- type: startingGear
+  id: ThunderdomeEsword
+  equipment:
+    suitstorage: EnergySword
+  storage:
+    back:
+      - Flash
+      - Stimpack # терпите у вас и так авторефилл после убийства
+
+- type: startingGear
+  id: ThunderdomeCapoeira
+  equipment:
+    suitstorage: CapoeiraManual
+  storage:
+    back:
+    - Flash
+    - BurnAutoInjector
+    - BruteAutoInjector # брут урон чаще, Q/A брут инъектор
+
+# - type: startingGear # Мама я люблю кокаин
+#   id: ThunderdomeSmg2
+#   equipment:
+#     suitstorage: WeaponSubMachineGunC20r
+#   storage:
+#     back:
+#       - Flash
+#       - MagazinePistolSubMachineGun
+#       - MagazinePistolSubMachineGun
+
+- type: startingGear
+  id: ThunderdomeSmg3
+  equipment:
+    suitstorage: WeaponRifleWSPR
+  storage:
+    back:
+      - Flash
+      - MagazineCaselessRifle
+      - MagazineCaselessRifle
+
+- type: startingGear
+  id: ThunderdomeEstoc
+  equipment:
+    suitstorage: WeaponRifleEstoc
+  storage:
+    back:
+      - Flash
+      - MagazineLightRifle
+      - MagazineLightRifle
+
+- type: startingGear
+  id: ThunderdomeAdvancedLaser
+  equipment:
+    suitstorage: WeaponAdvancedLaser
+  storage:
+    back:
+      - Flash
+      - PortableRechargerCompact
+
+- type: startingGear
+  id: ThunderdomeLaserRifle
+  equipment:
+    suitstorage: WeaponLaserCarbineAutoRecharge
+  storage:
+    back:
+      - Flash
+      - PortableRechargerCompact
+
+- type: startingGear
+  id: ThunderdomeLaserSniper
+  equipment:
+    suitstorage: WeaponSniperLaser
+  storage:
+    back:
+      - Flash
+      - PortableRechargerCompact
+
+# Grenades
+- type: startingGear
+  id: ThunderdomeGrenadeNone
+  # No grenade
+
+- type: startingGear
+  id: ThunderdomeGrenadeFrag
+  storage:
+    belt:
+      - GrenadeShrapnel
+
+- type: startingGear
+  id: ThunderdomeGrenadeFlash
+  storage:
+    belt:
+      - GrenadeFlashBang
+
+- type: startingGear
+  id: ThunderdomeGrenadeSmoke
+  storage:
+    belt:
+      - SmokeGrenade
+      - SmokeGrenade
+
+- type: startingGear
+  id: ThunderdomeGrenadeIncendiary
+  storage:
+    belt:
+      - GrenadeIncendiary
+
+- type: startingGear
+  id: ThunderdomeGrenadeCleaner
+  storage:
+    belt:
+      - CleanerGrenade
+
+- type: startingGear
+  id: ThunderdomeGrenadeStinger
+  storage:
+    belt:
+      - GrenadeStinger
+
+- type: startingGear
+  id: ThunderdomeGrenadeTearGas
+  storage:
+    belt:
+      - TearGasGrenade
+
+# Medical items
+- type: startingGear
+  id: ThunderdomeMedicalDefault
+  storage:
+    back:
+      - MedicatedSuture
+      - RegenerativeMesh
+      - PillCanisterTricordrazine
+      - PillCanisterTricordrazine
+      - SprayBottleStypticPowderThunderdome
+      - SprayBottleSilverSulfadiazineThunderdome
+- type: startingGear
+  id: ThunderdomeMedicalEphedrine
+  storage:
+    back:
+      - Brutepack
+      - Ointment
+      - Gauze
+      - EphedrineAutoInjectorThunderdome
+
+- type: startingGear
+  id: ThunderdomeMedicalBicaridine
+  storage:
+    back:
+      - Brutepack
+      - Ointment
+      - Gauze
+      - DermalineAutoInjectorThunderdome
+      - BicaridineAutoInjectorThunderdome
+
+# Cosmetic options - Head
+- type: startingGear
+  id: ThunderdomeHead1
+  equipment:
+    head: ClothingHeadHelmetBasic
+
+- type: startingGear
+  id: ThunderdomeHead2
+  equipment:
+    head: ClothingHeadHatBeretSecurity
+
+- type: startingGear
+  id: ThunderdomeHead3
+  equipment:
+    head: ClothingHeadHatBeretBrigmedic
+
+- type: startingGear
+  id: ThunderdomeHead4
+  equipment:
+    head: ClothingHeadHatBeretSecurityMedic
+
+- type: startingGear
+  id: ThunderdomeHead5
+  equipment:
+    head: ClothingHeadHatBeretHoS
+
+- type: startingGear
+  id: ThunderdomeHead6
+  equipment:
+    head: ClothingHeadSanabi
+
+- type: startingGear
+  id: ThunderdomeHead7
+  equipment:
+    head: ClothingHeadHatChameleon
+
+# Cosmetic options - Neck
+- type: startingGear
+  id: ThunderdomeNeck1
+  # No cloak
+
+- type: startingGear
+  id: ThunderdomeNeck2
+  equipment:
+    neck: ClothingNeckCloakMoth
+
+- type: startingGear
+  id: ThunderdomeNeck3
+  equipment:
+    neck: ClothingNeckCloakGoliathCloak
+
+- type: startingGear
+  id: ThunderdomeNeck4
+  equipment:
+    neck: ClothingNeckEnsembleTrans
+
+- type: startingGear
+  id: ThunderdomeNeck5
+  equipment:
+    neck: ClothingNeckCloakSanabi
+
+- type: startingGear
+  id: ThunderdomeNeck6
+  equipment:
+    neck: ClothingNeckScarfBlueshield
+
+- type: startingGear
+  id: ThunderdomeNeck7
+  equipment:
+    neck: ClothingNeckOldClothWrap
+
+- type: startingGear
+  id: ThunderdomeNeck8
+  equipment:
+    neck: ClothingNeckCloakCentcomBlack
+
+- type: startingGear
+  id: ThunderdomeNeck9
+  equipment:
+    neck: ClothingNeckMantleHOSShoulder
+
+- type: startingGear
+  id: ThunderdomeNeck10
+  equipment:
+    neck: ClothingNeckMantleERTLeader
+
+- type: startingGear
+  id: ThunderdomeNeck11
+  equipment:
+    neck: ClothingNeckCloakAdmin
+
+- type: startingGear
+  id: ThunderdomeNeck12
+  equipment:
+    neck: ClothingNeckOldClothWrap
+
+- type: startingGear
+  id: ThunderdomeNeck13
+  equipment:
+    neck: ClothingNeckChameleon
+
+# Glasses
+- type: startingGear
+  id: ThunderdomeGlasses1
+  equipment:
+    eyes: ClothingEyesGlassesSunglasses
+
+- type: startingGear
+  id: ThunderdomeGlasses2
+  equipment:
+    eyes: ClothingEyesGlassesSecurity
+
+- type: startingGear
+  id: ThunderdomeGlasses3
+  equipment:
+    eyes: ClothingEyesHudMedical
+
+- type: startingGear
+  id: ThunderdomeGlasses4
+  equipment:
+    eyes: ClothingEyesThermalVisionGoggles
+
+- type: startingGear
+  id: ThunderdomeGlasses5
+  equipment:
+    eyes: ClothingEyesNightVisionGoggles
+
+# Backpack
+- type: startingGear
+  id: ThunderdomeBackpack1
+  equipment:
+    back: ClothingBackpack
+
+- type: startingGear
+  id: ThunderdomeBackpack2
+  equipment:
+    back: ClothingBackpackSatchel
+
+- type: startingGear
+  id: ThunderdomeBackpack3
+  equipment:
+    back: ClothingBackpackSatchelLeather
+
+- type: startingGear
+  id: ThunderdomeBackpack4
+  equipment:
+    back: ClothingBackpackDuffel
+
+# Utility items
+- type: startingGear
+  id: ThunderdomeUtilityNone
+
+- type: startingGear
+  id: ThunderdomeUtilitySoap
+  storage:
+    back:
+      - Soap
+
+- type: startingGear
+  id: ThunderdomeUtilityThrowingKnives
+  storage:
+    back:
+      - ThrowingKnife
+      - ThrowingKnife
+      - ThrowingKnife
+      - ThrowingKnife
+
+- type: startingGear
+  id: ThunderdomeUtilityRollerSkates
+  storage:
+    back:
+      - ClothingShoesSkates
+
+- type: startingGear
+  id: ThunderdomeUtilityDecoy
+  storage:
+    back:
+      - DecoyHologramThunderdome

@@ -1,0 +1,46 @@
+- type: latheRecipe
+  id: ADTCryoPodMachineCircuitboard
+  parent: BaseCircuitboardRecipe
+  result: CryoPodMachineCircuitboard
+  materials:
+    Steel: 800
+    Glass: 900
+    Gold: 100
+    Silver: 900
+
+- type: latheRecipe
+  parent: BaseCircuitboardRecipe
+  id: SupermatterComputerCircuitboardRecipe
+  result: SupermatterComputerCircuitboard
+
+
+- type: latheRecipe
+  parent: BaseCircuitboardRecipe
+  id: ADTMinesweeperCircuitboard
+  result: MinesweeperCircuitboard
+  completetime: 3
+  materials:
+     Steel: 100
+     Glass: 500
+     Plastic: 500
+
+- type: latheRecipe
+  parent: BaseCircuitboardRecipe
+  id: ADTBlockGameArcadeComputerCircuitboard
+  result: BlockGameArcadeComputerCircuitboard
+  completetime: 3
+  materials:
+     Steel: 100
+     Glass: 500
+     Plastic: 500
+
+- type: latheRecipe
+  parent: BaseCircuitboardRecipe
+  id: ADTSpaceVillainArcadeComputerCircuitboard
+  result: SpaceVillainArcadeComputerCircuitboard
+  completetime: 3
+  materials:
+     Steel: 100
+     Glass: 500
+     Plastic: 500
+

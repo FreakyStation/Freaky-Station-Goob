@@ -1,0 +1,107 @@
+- type: roleLoadout
+  id: JobTypanAtmosTech
+  groups:
+  - Inventory # Corvax-Loadouts
+  - GroupTankHarness
+  - SyndicateBackpack
+  - Glasses
+  - Survival
+  - Trinkets
+  - GroupSpeciesBreathTool
+  - TypanAtmosphericsEngineerUniform
+
+- type: roleLoadout
+  id: JobTypanBotanist
+  groups:
+  - Inventory # Corvax-Loadouts
+  - GroupTankHarness
+  - SyndicateBackpack
+  - Glasses
+  - Survival
+  - Trinkets
+  - GroupSpeciesBreathTool
+  - TypanBotanistUniform
+
+- type: roleLoadout
+  id: JobTypanCargotech
+  groups:
+  - Inventory # Corvax-Loadouts
+  - GroupTankHarness
+  - SyndicateBackpack
+  - Glasses
+  - Survival
+  - Trinkets
+  - GroupSpeciesBreathTool
+  - TypanCargotechUniform
+
+- type: roleLoadout
+  id: JobTypanChef
+  groups:
+  - Inventory # Corvax-Loadouts
+  - GroupTankHarness
+  - SyndicateBackpack
+  - Glasses
+  - Survival
+  - Trinkets
+  - GroupSpeciesBreathTool
+  - TypanChefUniform
+
+- type: roleLoadout
+  id: JobTypanMedic
+  groups:
+  - Inventory # Corvax-Loadouts
+  - GroupTankHarness
+  - SyndicateBackpack
+  - Glasses
+  - Survival
+  - Trinkets
+  - GroupSpeciesBreathTool
+  - TypanMedicUniform
+
+- type: roleLoadout
+  id: JobTypanResearchDirector
+  groups:
+  - Inventory # Corvax-Loadouts
+  - GroupTankHarness
+  - SyndicateBackpack
+  - Glasses
+  - Survival
+  - Trinkets
+  - GroupSpeciesBreathTool
+  - TypanResearchDirectorUniform
+
+- type: roleLoadout
+  id: JobTypanScience
+  groups:
+  - Inventory # Corvax-Loadouts
+  - GroupTankHarness
+  - SyndicateBackpack
+  - Glasses
+  - Survival
+  - Trinkets
+  - GroupSpeciesBreathTool
+  - TypanResearcherUniform
+
+- type: roleLoadout
+  id: JobTypanCommander
+  groups:
+  - Inventory # Corvax-Loadouts
+  - GroupTankHarness
+  - SyndicateBackpack
+  - Glasses
+  - Survival
+  - Trinkets
+  - GroupSpeciesBreathTool
+  - TypanCommunicationsOfficerUniform
+
+- type: roleLoadout
+  id: JobTypanPatrol
+  groups:
+  - Inventory # Corvax-Loadouts
+  - GroupTankHarness
+  - SyndicateBackpack
+  - Glasses
+  - Survival
+  - Trinkets
+  - GroupSpeciesBreathTool
+  - TypanPatrolUniform

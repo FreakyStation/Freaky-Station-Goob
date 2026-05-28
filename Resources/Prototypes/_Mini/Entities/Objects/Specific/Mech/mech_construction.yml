@@ -1,0 +1,115 @@
+# TypanRipley APLU
+
+- type: entity
+  id: BaseTypanRipleyPart
+  parent: BaseMechPart
+  suffix: Typan
+  abstract: true
+  components:
+  - type: Sprite
+    drawdepth: Items
+    noRot: false
+    sprite: Objects/Specific/Mech/ripley_construction.rsi
+
+- type: entity
+  id: BaseTypanRipleyPartItem
+  parent: BaseTypanRipleyPart
+  abstract: true
+  components:
+  - type: Item
+    size: Ginormous
+
+- type: entity
+  parent: BaseTypanRipleyPart
+  id: TypanRipleyHarness
+  name: blood-red Ripley harness
+  description: The core frame of the blood-red Ripley.
+  components:
+  - type: Appearance
+  - type: ItemMapper
+    mapLayers:
+      ripley_l_arm+o:
+        whitelist:
+          tags:
+          - TypanRipleyLArm
+      ripley_r_arm+o:
+        whitelist:
+          tags:
+          - TypanRipleyRArm
+      ripley_l_leg+o:
+        whitelist:
+          tags:
+          - TypanRipleyLLeg
+      ripley_r_leg+o:
+        whitelist:
+          tags:
+          - TypanRipleyRLeg
+    sprite: Objects/Specific/Mech/ripley_construction.rsi
+  - type: ContainerContainer
+    containers:
+      mech-assembly-container: !type:Container
+      battery-container: !type:Container
+  - type: MechAssemblyVisuals
+    statePrefix: ripley
+  - type: Sprite
+    state: ripley_harness+o
+    noRot: true
+  - type: PartAssembly
+    parts:
+      TypanRipley:
+      - TypanRipleyLArm
+      - TypanRipleyRArm
+      - TypanRipleyLLeg
+      - TypanRipleyRLeg
+    containerId: mech-assembly-container
+  - type: Construction
+    graph: TypanRipley
+    node: start
+
+- type: entity
+  parent: BaseTypanRipleyPartItem
+  id: TypanRipleyLArm
+  name: blood-red Ripley left arm
+  description: The left arm of the blood-red Ripley. It belongs on the mech chassis.
+  components:
+  - type: Sprite
+    state: ripley_l_arm
+  - type: Tag
+    tags:
+    - TypanRipleyLArm
+
+- type: entity
+  parent: BaseTypanRipleyPartItem
+  id: TypanRipleyLLeg
+  name: blood-red Ripley left leg
+  description: The left leg of the blood-red Ripley. It belongs on the mech chassis.
+  components:
+  - type: Sprite
+    state: ripley_l_leg
+  - type: Tag
+    tags:
+    - TypanRipleyLLeg
+
+- type: entity
+  parent: BaseTypanRipleyPartItem
+  id: TypanRipleyRLeg
+  name: blood-red Ripley right leg
+  description: The right leg of the blood-red Ripley. It belongs on the mech chassis.
+  components:
+  - type: Sprite
+    state: ripley_r_leg
+  - type: Tag
+    tags:
+    - TypanRipleyRLeg
+
+- type: entity
+  parent: BaseTypanRipleyPartItem
+  id: TypanRipleyRArm
+  name: blood-red Ripley right arm
+  description: The right arm of the blood-red Ripley. It belongs on the mech chassis.
+  components:
+  - type: Sprite
+    state: ripley_r_arm
+  - type: Tag
+    tags:
+    - TypanRipleyRArm

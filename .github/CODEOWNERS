@@ -1,0 +1,20 @@
+# Last match in file takes precedence.
+
+# Host
+* @Egorql
+
+# Owner
+* @Casha
+
+# Mapping, Spriting
+* @Sherlook
+
+# Locale
+#/Resources/Locale @
+#/Resources/ServerInfo @
+
+# Textures
+#/Resources/Textures @
+
+# Development
+* @ANIvarm

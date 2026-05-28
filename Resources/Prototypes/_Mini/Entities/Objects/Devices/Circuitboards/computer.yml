@@ -1,0 +1,137 @@
+- type: entity
+  parent: BaseItem
+  id: BaseComputerCircuitboardTypan
+  name: консольная плата
+  abstract: true
+  suffix: Тайпан
+  components:
+  - type: ComputerBoard
+  - type: Sprite
+    sprite: _Mini/Objects/Misc/module.rsi
+    state: cpu_syndicate
+  - type: Item
+    storedRotation: -90
+  - type: StaticPrice
+    price: 100
+  - type: PhysicalComposition
+    materialComposition:
+      Glass: 230
+    chemicalComposition:
+      Silicon: 20
+
+- type: entity
+  parent: BaseComputerCircuitboardTypan
+  id: AnalysisComputerCircuitboardTypan
+  name: аналитическая консоль (консольная плата)
+  description: Консольная плата для аналитической консоли.
+  components:
+  - type: ComputerBoard
+    prototype: ComputerAnalysisConsole
+
+- type: entity
+  parent: BaseComputerCircuitboardTypan
+  id: CargoBountyComputerCircuitboardTypan
+  name: консоль запросов (консольная плата)
+  description: Консольная плата для консоли запросов.
+  components:
+  - type: ComputerBoard
+    prototype: ComputerCargoBounty
+
+- type: entity
+  parent: BaseComputerCircuitboardTypan
+  id: CargoRequestComputerCircuitboardTypan
+  name: консоль заказа грузов (консольная плата)
+  description: Консольная плата для консоли заказа грузов.
+  components:
+  - type: ComputerBoard
+    prototype: ComputerCargoOrders
+
+- type: entity
+  parent: BaseComputerCircuitboardTypan
+  id: CargoSaleComputerCircuitboardTypan
+  name: консоль продажи товаров (консольная плата)
+  description: Консольная плата для консоли продажи товаров.
+  components:
+  - type: ComputerBoard
+    prototype: ComputerPalletConsole
+
+- type: entity
+  parent: BaseComputerCircuitboardTypan
+  id: SurveillanceCameraMonitorCircuitboardTypan
+  name: монитор камер слежения (консольная плата)
+  description: Консольная плата для монитора камер слежения.
+  components:
+  - type: ComputerBoard
+    prototype: ComputerSurveillanceCameraMonitor
+
+- type: entity
+  parent: BaseComputerCircuitboardTypan
+  id: CommsComputerCircuitboardTypan
+  name: консоль связи (консольная плата)
+  description: Консольная плата для консоли связи.
+  components:
+  - type: ComputerBoard
+    prototype: ComputerTypanComms
+
+- type: entity
+  parent: BaseComputerCircuitboardTypan
+  id: CrewMonitoringComputerCircuitboardTypan
+  name: консоль мониторинга экипажа (консольная плата)
+  description: Консольная плата для консоли мониторинга экипажа.
+  components:
+  - type: ComputerBoard
+    prototype: ComputerCrewMonitoring
+
+- type: entity
+  parent: BaseComputerCircuitboardTypan
+  id: IDComputerCircuitboardTypan
+  name: консоль ID карт (консольная плата)
+  description: Консольная плата для консоли ID карт.
+  components:
+  - type: ComputerBoard
+    prototype: ComputerId
+
+- type: entity
+  parent: BaseComputerCircuitboardTypan
+  id: IFFConsoleCircuitboardTypan
+  name: консоль системы опознавания (консольная плата)
+  description: Позволяет управлять параметрами системы опознавания судна.
+  components:
+  - type: ComputerBoard
+    prototype: ComputerIFFSyndicate
+
+- type: entity
+  parent: BaseComputerCircuitboardTypan
+  id: ResearchComputerCircuitboardTypan
+  name: исследовательская консоль (консольная плата)
+  description: Консольная плата исследовательской консоли.
+  components:
+  - type: ComputerBoard
+    prototype: ComputerResearchAndDevelopment
+
+- type: entity
+  parent: BaseComputerCircuitboardTypan
+  id: RoboticsConsoleCircuitboardTypan
+  name: консоль управления робототехникой (консольная плата)
+  description: Консольная плата для консоли управления робототехникой.
+  components:
+  - type: ComputerBoard
+    prototype: ComputerRoboticsControl
+
+- type: entity
+  parent: BaseComputerCircuitboardTypan
+  id: ShuttleConsoleCircuitboardTypan
+  name: консоль управления шаттлом (консольная плата)
+  description: Консольная плата для консоли управления шаттлом.
+  components:
+  - type: ComputerBoard
+    prototype: ComputerShuttleSyndie
+
+- type: entity
+  parent: BaseComputerCircuitboardTypan
+  id: StationAiUploadCircuitboardTypan
+  name: консоль загрузки ИИ (консольная плата)
+  description: Консольная плата для консоли загрузки ИИ.
+  components:
+  - type: ComputerBoard
+    prototype: StationAiUploadComputer
