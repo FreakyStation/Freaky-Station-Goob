@@ -1,5 +1,6 @@
 using Content.Shared.Actions;
 using Content.Shared.Chemistry.Reagent;
+using Robust.Shared.Audio;
 using Robust.Shared.GameStates;
 using Robust.Shared.Prototypes;
 
@@ -28,6 +29,15 @@ public sealed partial class SlasherRegenerateComponent : Component
     /// </summary>
     [DataField("reagentAmount")]
     public float ReagentAmount = 10f;
+
+    [DataField]
+    public int SoulCharges;
+
+    [DataField]
+    public EntProtoId RegenerateEffect = "SlasherRegenerateEffect";
+
+    [DataField]
+    public SoundSpecifier RegenerateSound = new SoundPathSpecifier("/Audio/_Goobstation/Slasher/slasher_regenerate.ogg");
 }
 
 

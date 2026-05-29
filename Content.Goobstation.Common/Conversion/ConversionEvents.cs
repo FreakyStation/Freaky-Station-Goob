@@ -6,4 +6,5 @@ namespace Content.Goobstation.Common.Conversion;
 /// <param name="Blocked"> Can the entity be converted?. </param>
 [ByRefEvent]
 public record struct BeforeConversionEvent(
+    EntityUid Uid,
     bool Blocked = false);

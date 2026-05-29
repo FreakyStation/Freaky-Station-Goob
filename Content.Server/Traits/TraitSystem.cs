@@ -18,6 +18,7 @@ using Content.Server._EinsteinEngines.Language;
 using Content.Shared.GameTicking;
 using Content.Shared.Hands.Components;
 using Content.Shared.Hands.EntitySystems;
+using Content.Shared.Preferences;
 using Content.Shared.Roles;
 using Content.Shared.Traits;
 using Content.Shared.Whitelist;
@@ -104,6 +105,28 @@ public sealed class TraitSystem : EntitySystem
                 inhandEntity,
                 checkActionBlocker: false,
                 handsComp: handsComponent);
+        }
+    }
+
+    public void ApplyTraits(EntityUid mob, HumanoidCharacterProfile profile)
+    {
+        foreach (var traitId in profile.TraitPreferences)
+        {
+            if (!_prototypeManager.TryIndex<TraitPrototype>(traitId, out var traitPrototype))
+            {
+                Log.Warning($"No trait found with ID {traitId}!");
+                return;
+            }
+
+            if (_whitelistSystem.IsWhitelistFail(traitPrototype.Whitelist, mob) ||
+                _whitelistSystem.IsBlacklistPass(traitPrototype.Blacklist, mob))
+                continue;
+
+            if (traitPrototype.IncludedSpecies.Count > 0 && !traitPrototype.IncludedSpecies.Contains(profile.Species) ||
+                traitPrototype.ExcludedSpecies.Contains(profile.Species))
+                continue;
+
+            EntityManager.AddComponents(mob, traitPrototype.Components, false);
         }
     }
 }

@@ -1,6 +1,5 @@
 using Content.Goobstation.Shared.Changeling.Components;
 using Content.Goobstation.Shared.Changeling.Systems;
-using Content.Shared.Atmos.Components;
 using Content.Server.Atmos.EntitySystems;
 using Content.Server.Polymorph.Systems;
 using Content.Server.Temperature.Components;

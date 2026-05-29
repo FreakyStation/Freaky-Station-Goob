@@ -14,6 +14,15 @@ using Robust.Shared.Prototypes;
 
 namespace Content.Goobstation.Shared.Religion.Nullrod.Components;
 
+    public enum NullrodRecallType
+    {
+        None,
+        Normal,
+        Unremoveable,
+        DualWield,
+        Embedded,
+    }
+
     [RegisterComponent, NetworkedComponent, AutoGenerateComponentState]
     public sealed partial class NullrodComponent : Component
     {
@@ -68,4 +77,7 @@ namespace Content.Goobstation.Shared.Religion.Nullrod.Components;
         /// </summary>
         [DataField]
         public EntityUid? LastAttackedEntity;
+
+        [DataField]
+        public NullrodRecallType RecallType = NullrodRecallType.Normal;
     }

@@ -16,5 +16,7 @@ namespace Content.Goobstation.Common.Religion
     [RegisterComponent, NetworkedComponent] // Goobstation - Network that bitch!
     public sealed partial class BibleUserComponent : Component
     {
+        [DataField]
+        public EntityUid? NullRod;
     }
 }

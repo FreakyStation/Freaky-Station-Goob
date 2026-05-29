@@ -74,7 +74,7 @@ public sealed partial class TTSSystem
         if (soundData is null)
             return;
 
-        RaiseNetworkEvent(new PlayTTSEvent(soundData, isWhisper: true, isRadio: true, pitch: pitch), actor.PlayerSession);
+        RaiseNetworkEvent(new PlayTTSEvent(soundData, isWhisper: true, pitch: pitch), actor.PlayerSession);
     }
 
     private bool TryGetRadioVoice(EntityUid source, out string speaker, out float? pitch)

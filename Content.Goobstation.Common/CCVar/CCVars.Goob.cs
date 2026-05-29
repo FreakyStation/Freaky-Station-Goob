@@ -679,4 +679,22 @@ public sealed partial class GoobCVars
     /// </summary>
     public static readonly CVarDef<float> GpsUpdateRate =
         CVarDef.Create("gps.update_rate", 1f, CVar.SERVER | CVar.REPLICATED);
+
+    public static readonly CVarDef<int> ParticleQuality =
+        CVarDef.Create("graphics.particle_quality", 3, CVar.CLIENTONLY | CVar.ARCHIVE);
+
+    public static readonly CVarDef<int> ParticleGlobalBudget =
+        CVarDef.Create("graphics.particle_global_budget", 0, CVar.CLIENTONLY | CVar.ARCHIVE);
+
+    public static readonly CVarDef<bool> RoundEndNoEorgPopup =
+        CVarDef.Create("round_end.no_eorg_popup", true, CVar.CLIENTONLY | CVar.ARCHIVE);
+
+    public static readonly CVarDef<int> AskRoundEndNoEorgPopup =
+        CVarDef.Create("round_end.no_eorg_popup_ask_days", 7, CVar.CLIENTONLY | CVar.ARCHIVE);
+
+    public static readonly CVarDef<float> RoundEndNoEorgPopupTime =
+        CVarDef.Create("round_end.no_eorg_popup_time", 10f, CVar.CLIENTONLY | CVar.ARCHIVE);
+
+    public static readonly CVarDef<string> LastReadRoundEndNoEorgPopup =
+        CVarDef.Create("round_end.no_eorg_popup_last_read", "", CVar.CLIENTONLY | CVar.ARCHIVE);
 }

@@ -80,6 +80,24 @@ public abstract class SharedStealthSystem : EntitySystem
         Dirty(uid, component);
     }
 
+    public void SetRevealOnAttack(Entity<StealthComponent> ent, bool value)
+    {
+        if (ent.Comp.RevealOnAttack == value)
+            return;
+
+        ent.Comp.RevealOnAttack = value;
+        Dirty(ent);
+    }
+
+    public void SetRevealOnDamage(Entity<StealthComponent> ent, bool value)
+    {
+        if (ent.Comp.RevealOnDamage == value)
+            return;
+
+        ent.Comp.RevealOnDamage = value;
+        Dirty(ent);
+    }
+
 
     private void OnMobStateChanged(EntityUid uid, StealthComponent component, MobStateChangedEvent args)// Goobstation - Stealth change
     {

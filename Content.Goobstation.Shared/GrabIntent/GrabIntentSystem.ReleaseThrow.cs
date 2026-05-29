@@ -49,7 +49,7 @@ public sealed partial class GrabIntentSystem
 
     private void OnGrabReleaseAttempt(Entity<GrabbableComponent> ent, ref GrabAttemptReleaseEvent args)
     {
-        args.Released = TryGrabRelease(ent.Owner, args.user, args.puller);
+        args.Released = args.puller == null || TryGrabRelease(ent.Owner, args.user, args.puller.Value);
     }
 
     private bool TryGrabRelease(EntityUid pullableUid, EntityUid? user, EntityUid pullerUid)

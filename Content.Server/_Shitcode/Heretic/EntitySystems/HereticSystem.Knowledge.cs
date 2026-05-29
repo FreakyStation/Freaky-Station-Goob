@@ -20,14 +20,8 @@ public sealed partial class HereticSystem
     public HereticKnowledgePrototype GetKnowledge(ProtoId<HereticKnowledgePrototype> id)
         => _proto.Index(id);
 
-    public void RaiseKnowledgeEvent(EntityUid uid, HereticKnowledgeEvent ev, bool negative)
+    public void RaiseKnowledgeEvent(EntityUid uid, object ev, bool negative)
     {
-        if (negative)
-            EntityManager.RemoveComponents(uid, ev.AddedComponents);
-        else
-            EntityManager.AddComponents(uid, ev.AddedComponents);
-        ev.Negative = negative;
-        ev.Heretic = uid;
         RaiseLocalEvent(uid, (object) ev, true);
     }
 
@@ -45,24 +39,9 @@ public sealed partial class HereticSystem
         if (data.Event != null && body != null)
         {
             RaiseKnowledgeEvent(body.Value, data.Event, false);
-            ent.Comp.KnowledgeEvents.Add(data.Event);
         }
 
-        if (data.ActionPrototypes is { Count: > 0 })
-        {
-            foreach (var act in data.ActionPrototypes)
-            {
-                _actionContainer.AddAction(ent.Owner, act);
-            }
-        }
-
-        if (data.RitualPrototypes is { Count: > 0 })
-        {
-            foreach (var ritual in data.RitualPrototypes)
-            {
-                ent.Comp.KnownRituals.Add(_ritual.GetRitual(ritual));
-            }
-        }
+        _knowledge.AddKnowledge(ent.Owner, ent.Comp, id);
 
         Dirty(ent);
 

@@ -9,7 +9,6 @@ using Content.Shared.IdentityManagement;
 using Content.Shared.Inventory.VirtualItem;
 using Content.Shared.Item;
 using Content.Shared.Movement.Pulling.Components;
-using Content.Shared.Movement.Pulling.Events;
 using Content.Shared.Movement.Systems;
 using Content.Shared.Popups;
 using Content.Shared.Random.Helpers;
@@ -20,6 +19,10 @@ using Robust.Shared.Player;
 using Robust.Shared.Random;
 
 namespace Content.Goobstation.Shared.GrabIntent;
+
+using GrabStage = Content.Goobstation.Common.Grab.GrabStage;
+using GrabStageDirection = Content.Goobstation.Common.Grab.GrabStageDirection;
+using GrabResistResult = Content.Goobstation.Common.Grab.GrabResistResult;
 
 public sealed partial class GrabIntentSystem
 {
@@ -264,9 +267,10 @@ public sealed partial class GrabIntentSystem
             && TryComp<RequireProjectileTargetComponent>(pullable.Owner, out var layingDown)
             && layingDown.Active)
         {
-            var ev = new CheckGrabOverridesEvent(newStage);
+            var ev = new Content.Shared.Movement.Pulling.Events.CheckGrabOverridesEvent(
+                (Content.Goobstation.Common.MartialArts.GrabStage) (int) newStage);
             RaiseLocalEvent(pullerUid, ev);
-            newStage = ev.Stage;
+            newStage = (GrabStage) (int) ev.Stage;
         }
 
         if (grabStageOverride != null)

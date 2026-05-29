@@ -107,6 +107,21 @@ public sealed class SurveillanceCameraSystem : EntitySystem
 
     public const int CameraNameLimit = 32;
 
+    public void ConfigureCameraNetwork(EntityUid uid, string subnet, string cameraId, SurveillanceCameraComponent? component = null)
+    {
+        if (!Resolve(uid, ref component))
+            return;
+
+        component.CameraId = cameraId;
+        component.NameSet = true;
+        component.NetworkSet = true;
+    }
+
+    public void ClearActiveViewers(EntityUid monitor, SurveillanceCameraComponent component)
+    {
+        RemoveActiveViewers(monitor, new HashSet<EntityUid>(component.ActiveViewers), monitor, component);
+    }
+
     public override void Initialize()
     {
         SubscribeLocalEvent<SurveillanceCameraComponent, ComponentShutdown>(OnShutdown);

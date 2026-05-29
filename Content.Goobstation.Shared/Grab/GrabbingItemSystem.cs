@@ -5,7 +5,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 using Content.Goobstation.Common.Grab;
-using Content.Goobstation.Common.MartialArts;
 using Content.Shared.Hands;
 using Content.Shared.IdentityManagement;
 using Content.Shared.Movement.Pulling.Components;
@@ -68,7 +67,7 @@ public sealed class GrabbingItemSystem : EntitySystem
             return;
 
         if (!args.IsHeavyAttack && (!TryComp(args.User, out PullerComponent? puller) ||
-            puller.GrabStage < GrabStage.Suffocate))
+            (int) puller.GrabStage < (int) GrabStage.Suffocate))
             return;
 
         args.Cancelled = true;

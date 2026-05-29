@@ -134,4 +134,7 @@ public sealed class CCCVars
 
     public static readonly CVarDef<float> PhotoPlayTimeHours =
         CVarDef.Create("photo.playtime_require_time", 20f, CVar.SERVERONLY);
+
+    public static readonly CVarDef<int> MaxSquadNameLength =
+        CVarDef.Create("corvax.squad.max_name_length", 16, CVar.SERVER | CVar.REPLICATED);
 }

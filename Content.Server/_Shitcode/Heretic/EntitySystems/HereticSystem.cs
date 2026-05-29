@@ -58,7 +58,7 @@ using Content.Server.Polymorph.Systems;
 
 namespace Content.Server.Heretic.EntitySystems;
 
-public sealed class HereticSystem : EntitySystem
+public sealed partial class HereticSystem : EntitySystem
 {
     [Dependency] private readonly SharedAudioSystem _audio = default!;
     [Dependency] private readonly SharedMindSystem _mind = default!;

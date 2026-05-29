@@ -15,27 +15,24 @@ public sealed class StaminaDamageModifierOnCollideSystem : EntitySystem
     {
         base.Initialize();
 
-        SubscribeLocalEvent<StaminaDamageModifierOnCollideComponent, AfterProjectileHitEvent>(OnProjectileHitEvent);
+        SubscribeLocalEvent<StaminaDamageModifierOnCollideComponent, ProjectileHitEvent>(OnProjectileHitEvent);
     }
 
-    private void OnProjectileHitEvent(Entity<StaminaDamageModifierOnCollideComponent> entity, ref AfterProjectileHitEvent ev)
+    private void OnProjectileHitEvent(Entity<StaminaDamageModifierOnCollideComponent> entity, ref ProjectileHitEvent ev)
     {
-        if (entity.Comp.AppliedModifier is null || ev.ModifiedDamage is null)
+        if (entity.Comp.AppliedModifier is null)
             return;
 
-        if (!ev.ModifiedDamage.DamageDict.ContainsKey(entity.Comp.AppliedModifier))
+        if (!ev.Damage.DamageDict.ContainsKey(entity.Comp.AppliedModifier))
             return;
 
         if (!HasComp<StaminaComponent>(ev.Target))
             return;
 
-        var armorEv = new CoefficientStaminaQueryEvent(Shared.Inventory.SlotFlags.All);
-        RaiseLocalEvent(ev.Target, armorEv);
+        var blunt = ev.Damage.DamageDict[entity.Comp.AppliedModifier];
 
-        var blunt = ev.ModifiedDamage.DamageDict[entity.Comp.AppliedModifier];
+        var staminaDamage = blunt * entity.Comp.StaminaCoefficient;
 
-        var staminaDamage = blunt * entity.Comp.StaminaCoefficient * armorEv.StaminaDamage;
-
-        _stamina.TakeStaminaDamage(ev.Target, staminaDamage.Float());
+        _stamina.TakeStaminaDamage(ev.Target, staminaDamage.Float(), applyResistances: true);
     }
 }

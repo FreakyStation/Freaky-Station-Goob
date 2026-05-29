@@ -10,6 +10,7 @@ public enum Skills
     Shooting,
     AdvancedBuilding,
     Surgery,
+    SelfSurgery,
     MedicalEquipment,
     Butchering
 }

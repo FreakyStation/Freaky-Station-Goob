@@ -62,6 +62,7 @@ public sealed partial class StationAiCoreComponent : Component
     public EntProtoId? PhysicalEntityProto = "StationAiHoloLocal";
 
     public const string Container = "station_ai_mind_slot";
+    public const string PdaContainer = "station_ai_pda_slot";
 }
 
 /// <summary>

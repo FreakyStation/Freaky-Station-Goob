@@ -83,6 +83,22 @@ public sealed class SkillsSystem : EntitySystem
             mind.Skills.UnionWith(skills);
     }
 
+    public void GrantSkill(EntityUid entity, Shared._CorvaxGoob.Skills.Skills skill)
+    {
+        GrantSkill(entity, new HashSet<Shared._CorvaxGoob.Skills.Skills> { skill });
+    }
+
+    public bool TryGetSkills(EntityUid entity, out HashSet<Shared._CorvaxGoob.Skills.Skills> skills)
+    {
+        skills = new HashSet<Shared._CorvaxGoob.Skills.Skills>();
+
+        if (!_mind.TryGetMind(entity, out _, out var mind))
+            return false;
+
+        skills.UnionWith(mind.Skills);
+        return true;
+    }
+
     /// <summary>
     /// Revokes all skills and grant new on target mind.
     /// </summary>

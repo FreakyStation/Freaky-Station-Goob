@@ -34,6 +34,10 @@
                                                               ButtonText="{Loc 'ui-lobby-observe-button'}" Margin="0 10 0 10" />
                                 <buttons:WhiteLobbyTextButton Name="CharacterSetupButton" Access="Public"
                                                               ButtonText="{Loc 'lobby-character-preview-panel-character-setup-button'}" Margin="0 10 0 10" />
+                                <buttons:WhiteLobbyTextButton Name="DailyRewardsButton" Access="Public"
+                                                              ButtonText="{Loc 'ui-lobby-daily-rewards-button'}" Margin="0 10 0 10" />
+                                <buttons:WhiteLobbyTextButton Name="AntagTokenButton" Access="Public"
+                                                              ButtonText="{Loc 'ui-lobby-antag-token-button'}" Margin="0 10 0 10" />
                                 <buttons:WhiteLobbyTextButton Name="OptionsButton" Access="Public"
                                                               ButtonText="{Loc 'ui-lobby-options-button'}" Margin="0 10 0 10" />
                                 <buttons:WhiteLobbyTextButton Name="VotemenuButton" Access="Public"

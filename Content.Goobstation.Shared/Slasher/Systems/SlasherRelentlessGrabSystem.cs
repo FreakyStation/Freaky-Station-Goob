@@ -1,4 +1,3 @@
-using Content.Goobstation.Common.Grab;
 using Content.Goobstation.Common.MartialArts;
 using Content.Goobstation.Common.Weapons;
 using Content.Goobstation.Shared.Slasher.Components;

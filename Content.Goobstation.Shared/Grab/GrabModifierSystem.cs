@@ -1,5 +1,4 @@
 using Content.Goobstation.Common.Grab;
-using Content.Goobstation.Common.MartialArts;
 using Content.Shared.Hands;
 using Content.Shared.Inventory;
 using Content.Shared.Turrets;

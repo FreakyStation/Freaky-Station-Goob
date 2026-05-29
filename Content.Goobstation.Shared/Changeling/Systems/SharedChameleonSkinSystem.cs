@@ -96,7 +96,6 @@ public abstract partial class SharedChameleonSkinSystem : EntitySystem
         var stealthMove = EnsureComp<StealthOnMoveComponent>(ent);
         stealthMove.NoMoveTime = ent.Comp.WaitTime;
         stealthMove.PassiveVisibilityRate = ent.Comp.VisibilityRate;
-        stealthMove.BreakOnMove = ent.Comp.BreakOnMove;
 
         Dirty(ent, stealthMove);
     }

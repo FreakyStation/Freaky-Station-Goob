@@ -13,6 +13,9 @@ public sealed partial class ThrowFishingLureActionEvent : WorldTargetActionEvent
 
 public sealed partial class PullFishingLureActionEvent : InstantActionEvent;
 
+[ByRefEvent]
+public readonly record struct FishCaughtEvent;
+
 [Serializable, NetSerializable]
 public sealed class ActiveFishingSpotComponentState : ComponentState
 {

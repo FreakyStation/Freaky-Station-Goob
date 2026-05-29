@@ -1,4 +1,4 @@
-using Content.Goobstation.Common.MartialArts;
+using Content.Goobstation.Common.Grab;
 using Robust.Shared.GameStates;
 
 namespace Content.Goobstation.Shared.Grab;
