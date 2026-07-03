@@ -11,7 +11,7 @@ namespace Content.Client._FreakyStation.UI;
 
 /// <summary>
 /// Applies entrance animations to UI controls.
-/// Interpolates <see cref="Control.ModulateSelf"/> alpha each frame for a smooth fade-in.
+/// Interpolates <see cref="Control.Modulate"/> alpha each frame for a smooth fade-in.
 /// Detects newly opened <see cref="BaseWindow"/> instances automatically.
 /// </summary>
 public sealed class UiAnimationSystem : EntitySystem
@@ -44,7 +44,7 @@ public sealed class UiAnimationSystem : EntitySystem
 
             // New window — start fade-in
             _activeAnims[child] = 0f;
-            child.ModulateSelf = new Color(1f, 1f, 1f, 0f);
+            child.Modulate = new Color(1f, 1f, 1f, 0f);
         }
 
         _seenWindows.RemoveWhere(c => c.Disposed);
@@ -64,11 +64,11 @@ public sealed class UiAnimationSystem : EntitySystem
             // Ease-out-cubic
             var eased = 1f - MathF.Pow(1f - t, 3f);
 
-            control.ModulateSelf = new Color(1f, 1f, 1f, eased);
+            control.Modulate = new Color(1f, 1f, 1f, eased);
 
             if (t >= 1f)
             {
-                control.ModulateSelf = Color.White;
+                control.Modulate = Color.White;
                 _removeQueue.Add(control);
             }
             else
@@ -90,6 +90,6 @@ public sealed class UiAnimationSystem : EntitySystem
         if (control.Disposed)
             return;
         _activeAnims[control] = 0f;
-        control.ModulateSelf = new Color(1f, 1f, 1f, 0f);
+        control.Modulate = new Color(1f, 1f, 1f, 0f);
     }
 }
