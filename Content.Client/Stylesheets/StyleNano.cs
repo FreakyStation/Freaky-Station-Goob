@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2019 CatTheSystem <pogorelov950@gmail.com>
+﻿// SPDX-FileCopyrightText: 2019 CatTheSystem <pogorelov950@gmail.com>
 // SPDX-FileCopyrightText: 2026 Casha
 // SPDX-FileCopyrightText: 2019 Peter Wedder <burneddi@gmail.com>
 // SPDX-FileCopyrightText: 2019 Pieter-Jan Briers <pieterjan.briers@gmail.com>
@@ -979,6 +979,113 @@ namespace Content.Client.Stylesheets
                 BorderColor = Accent("#D8ECFF9A", 0.62f),
                 BorderThickness = new Thickness(1),
             };
+
+
+            // === Unified glass styleboxes for remaining elements ===
+
+            var glassScrollVGrabber = new StyleBoxFlat
+            {
+                BackgroundColor = Accent("#6B8FB8F2", 0.48f),
+                ContentMarginLeftOverride = DefaultGrabberSize,
+                ContentMarginTopOverride = DefaultGrabberSize
+            };
+            var glassScrollVGrabberHover = new StyleBoxFlat
+            {
+                BackgroundColor = Accent("#8DAEDAF2", 0.56f),
+                ContentMarginLeftOverride = DefaultGrabberSize,
+                ContentMarginTopOverride = DefaultGrabberSize
+            };
+            var glassScrollVGrabberGrabbed = new StyleBoxFlat
+            {
+                BackgroundColor = Accent("#A5C5EAF2", 0.64f),
+                ContentMarginLeftOverride = DefaultGrabberSize,
+                ContentMarginTopOverride = DefaultGrabberSize
+            };
+            var glassScrollHGrabber = new StyleBoxFlat
+            {
+                BackgroundColor = Accent("#6B8FB8F2", 0.48f),
+                ContentMarginTopOverride = DefaultGrabberSize
+            };
+            var glassScrollHGrabberHover = new StyleBoxFlat
+            {
+                BackgroundColor = Accent("#8DAEDAF2", 0.56f),
+                ContentMarginTopOverride = DefaultGrabberSize
+            };
+            var glassScrollHGrabberGrabbed = new StyleBoxFlat
+            {
+                BackgroundColor = Accent("#A5C5EAF2", 0.64f),
+                ContentMarginTopOverride = DefaultGrabberSize
+            };
+
+            var glassSliderFillBox = new StyleBoxTexture
+            {
+                Texture = sliderFillTex,
+                Modulate = tonedAccent,
+            };
+            glassSliderFillBox.SetPatchMargin(StyleBox.Margin.All, 12);
+
+            var glassSliderBackBox = new StyleBoxTexture
+            {
+                Texture = sliderFillTex,
+                Modulate = Accent("#1A2532F2", 0.30f),
+            };
+            glassSliderBackBox.SetPatchMargin(StyleBox.Margin.All, 12);
+
+            var glassProgressBarBg = new StyleBoxFlat
+            {
+                BackgroundColor = Accent("#15202CE0", 0.28f),
+                BorderColor = Accent("#5A7BA066", 0.42f),
+                BorderThickness = new Thickness(1),
+            };
+            glassProgressBarBg.SetContentMarginOverride(StyleBox.Margin.Vertical, 14.5f);
+
+            var glassProgressBarFg = new StyleBoxFlat
+            {
+                BackgroundColor = tonedAccent,
+            };
+            glassProgressBarFg.SetContentMarginOverride(StyleBox.Margin.Vertical, 14.5f);
+
+            var glassContextBtn = new StyleBoxFlat
+            {
+                BackgroundColor = Accent("#1A2D45BF", 0.40f),
+            };
+            var glassContextBtnHover = new StyleBoxFlat
+            {
+                BackgroundColor = Accent("#2D5280D9", 0.55f),
+            };
+            var glassContextBtnPressed = new StyleBoxFlat
+            {
+                BackgroundColor = Accent("#1B3855E6", 0.50f),
+            };
+
+            var glassChatBg = new StyleBoxFlat
+            {
+                BackgroundColor = Accent("#1A2532DD", 0.35f),
+            };
+            var glassChatSubBg = new StyleBoxFlat
+            {
+                BackgroundColor = Accent("#1A2532DD", 0.35f),
+            };
+            glassChatSubBg.SetContentMarginOverride(StyleBox.Margin.All, 2);
+
+            var glassPdaBg = new StyleBoxFlat
+            {
+                BackgroundColor = Accent("#151D2BF2", 0.30f),
+                BorderColor = Accent("#5A7BA066", 0.42f),
+                BorderThickness = new Thickness(1),
+            };
+
+            var glassMonoBtnNormal = new StyleBoxTexture(monotoneButton)
+            {
+                Modulate = Accent("#2A3A4FF2", 0.36f),
+            };
+            var glassMonoBtnPressed = new StyleBoxTexture(monotoneFilledButton)
+            {
+                Modulate = tonedAccent,
+            };
+
+            var accentLabelColor = Accent("#A88B5EFF", 0.55f);
+            var accentHeadingColor = Accent("#A88B5EFF", 0.62f);
 
             Stylesheet = new Stylesheet(BaseRules.Concat(new[]
             {
@@ -2401,6 +2508,226 @@ namespace Content.Client.Stylesheets
                 Element<ContainerButton>().Identifier(TreeItem.StyleIdentifierTreeButton)
                     .Pseudo(ContainerButton.StylePseudoClassHover)
                     .Prop(ContainerButton.StylePropertyStyleBox, glassTreeSelected),
+
+                // === Unified accent-tinted overrides for remaining elements ===
+
+                // ScrollBars → accent-tinted
+                new StyleRule(new SelectorElement(typeof(VScrollBar), null, null, null),
+                    new[] { new StyleProperty(ScrollBar.StylePropertyGrabber, glassScrollVGrabber) }),
+                new StyleRule(new SelectorElement(typeof(VScrollBar), null, null, new[] {ScrollBar.StylePseudoClassHover}),
+                    new[] { new StyleProperty(ScrollBar.StylePropertyGrabber, glassScrollVGrabberHover) }),
+                new StyleRule(new SelectorElement(typeof(VScrollBar), null, null, new[] {ScrollBar.StylePseudoClassGrabbed}),
+                    new[] { new StyleProperty(ScrollBar.StylePropertyGrabber, glassScrollVGrabberGrabbed) }),
+                new StyleRule(new SelectorElement(typeof(HScrollBar), null, null, null),
+                    new[] { new StyleProperty(ScrollBar.StylePropertyGrabber, glassScrollHGrabber) }),
+                new StyleRule(new SelectorElement(typeof(HScrollBar), null, null, new[] {ScrollBar.StylePseudoClassHover}),
+                    new[] { new StyleProperty(ScrollBar.StylePropertyGrabber, glassScrollHGrabberHover) }),
+                new StyleRule(new SelectorElement(typeof(HScrollBar), null, null, new[] {ScrollBar.StylePseudoClassGrabbed}),
+                    new[] { new StyleProperty(ScrollBar.StylePropertyGrabber, glassScrollHGrabberGrabbed) }),
+
+                // Slider default fill → accent-tinted
+                new StyleRule(SelectorElement.Type(typeof(Slider)), new[]
+                {
+                    new StyleProperty(Slider.StylePropertyFill, glassSliderFillBox),
+                    new StyleProperty(Slider.StylePropertyBackground, glassSliderBackBox),
+                }),
+
+                // ProgressBar → accent-tinted
+                new StyleRule(new SelectorElement(typeof(ProgressBar), null, null, null), new[]
+                {
+                    new StyleProperty(ProgressBar.StylePropertyBackground, glassProgressBarBg),
+                    new StyleProperty(ProgressBar.StylePropertyForeground, glassProgressBarFg),
+                }),
+
+                // Context menu buttons → accent-tinted
+                Element<ContextMenuElement>().Class(ContextMenuElement.StyleClassContextMenuButton)
+                    .Pseudo(ContainerButton.StylePseudoClassNormal)
+                    .Prop(Control.StylePropertyModulateSelf, Color.White)
+                    .Prop(ContainerButton.StylePropertyStyleBox, glassContextBtn),
+                Element<ContextMenuElement>().Class(ContextMenuElement.StyleClassContextMenuButton)
+                    .Pseudo(ContainerButton.StylePseudoClassHover)
+                    .Prop(Control.StylePropertyModulateSelf, Color.White)
+                    .Prop(ContainerButton.StylePropertyStyleBox, glassContextBtnHover),
+                Element<ContextMenuElement>().Class(ContextMenuElement.StyleClassContextMenuButton)
+                    .Pseudo(ContainerButton.StylePseudoClassPressed)
+                    .Prop(Control.StylePropertyModulateSelf, Color.White)
+                    .Prop(ContainerButton.StylePropertyStyleBox, glassContextBtnPressed),
+                Element<ContextMenuElement>().Class(ContextMenuElement.StyleClassContextMenuButton)
+                    .Pseudo(ContainerButton.StylePseudoClassDisabled)
+                    .Prop(Control.StylePropertyModulateSelf, Color.White)
+                    .Prop(ContainerButton.StylePropertyStyleBox, glassButtonDisabled),
+
+                // Confirmation menu → accent-tinted
+                Element<ContextMenuElement>().Class(ConfirmationMenuElement.StyleClassConfirmationContextMenuButton)
+                    .Pseudo(ContainerButton.StylePseudoClassNormal)
+                    .Prop(Control.StylePropertyModulateSelf, Color.White)
+                    .Prop(ContainerButton.StylePropertyStyleBox, glassContextBtn),
+                Element<ContextMenuElement>().Class(ConfirmationMenuElement.StyleClassConfirmationContextMenuButton)
+                    .Pseudo(ContainerButton.StylePseudoClassHover)
+                    .Prop(Control.StylePropertyModulateSelf, Color.White)
+                    .Prop(ContainerButton.StylePropertyStyleBox, glassContextBtnHover),
+                Element<ContextMenuElement>().Class(ConfirmationMenuElement.StyleClassConfirmationContextMenuButton)
+                    .Pseudo(ContainerButton.StylePseudoClassPressed)
+                    .Prop(Control.StylePropertyModulateSelf, Color.White)
+                    .Prop(ContainerButton.StylePropertyStyleBox, glassContextBtnPressed),
+
+                // Examine buttons → accent-tinted
+                Element<ExamineButton>().Class(ExamineButton.StyleClassExamineButton)
+                    .Pseudo(ContainerButton.StylePseudoClassNormal)
+                    .Prop(Control.StylePropertyModulateSelf, Color.White)
+                    .Prop(ContainerButton.StylePropertyStyleBox, glassContextBtn),
+                Element<ExamineButton>().Class(ExamineButton.StyleClassExamineButton)
+                    .Pseudo(ContainerButton.StylePseudoClassHover)
+                    .Prop(Control.StylePropertyModulateSelf, Color.White)
+                    .Prop(ContainerButton.StylePropertyStyleBox, glassContextBtnHover),
+                Element<ExamineButton>().Class(ExamineButton.StyleClassExamineButton)
+                    .Pseudo(ContainerButton.StylePseudoClassPressed)
+                    .Prop(Control.StylePropertyModulateSelf, Color.White)
+                    .Prop(ContainerButton.StylePropertyStyleBox, glassContextBtnPressed),
+
+                // Storage buttons → accent-tinted
+                Element<ContainerButton>().Class(StyleClassStorageButton)
+                    .Pseudo(ContainerButton.StylePseudoClassNormal)
+                    .Prop(Control.StylePropertyModulateSelf, Color.White)
+                    .Prop(ContainerButton.StylePropertyStyleBox, glassButtonNormal),
+                Element<ContainerButton>().Class(StyleClassStorageButton)
+                    .Pseudo(ContainerButton.StylePseudoClassHover)
+                    .Prop(Control.StylePropertyModulateSelf, Color.White)
+                    .Prop(ContainerButton.StylePropertyStyleBox, glassButtonHover),
+                Element<ContainerButton>().Class(StyleClassStorageButton)
+                    .Pseudo(ContainerButton.StylePseudoClassPressed)
+                    .Prop(Control.StylePropertyModulateSelf, Color.White)
+                    .Prop(ContainerButton.StylePropertyStyleBox, glassButtonPressed),
+                Element<ContainerButton>().Class(StyleClassStorageButton)
+                    .Pseudo(ContainerButton.StylePseudoClassDisabled)
+                    .Prop(Control.StylePropertyModulateSelf, Color.White)
+                    .Prop(ContainerButton.StylePropertyStyleBox, glassButtonDisabled),
+
+                // ListContainer buttons → accent-tinted
+                Element<ContainerButton>().Class(ListContainer.StyleClassListContainerButton)
+                    .Pseudo(ContainerButton.StylePseudoClassNormal)
+                    .Prop(Control.StylePropertyModulateSelf, Color.White)
+                    .Prop(ContainerButton.StylePropertyStyleBox, glassListItem),
+                Element<ContainerButton>().Class(ListContainer.StyleClassListContainerButton)
+                    .Pseudo(ContainerButton.StylePseudoClassHover)
+                    .Prop(Control.StylePropertyModulateSelf, Color.White)
+                    .Prop(ContainerButton.StylePropertyStyleBox, glassListItemSelected),
+                Element<ContainerButton>().Class(ListContainer.StyleClassListContainerButton)
+                    .Pseudo(ContainerButton.StylePseudoClassPressed)
+                    .Prop(Control.StylePropertyModulateSelf, Color.White)
+                    .Prop(ContainerButton.StylePropertyStyleBox, glassListItemSelected),
+                Element<ContainerButton>().Class(ListContainer.StyleClassListContainerButton)
+                    .Pseudo(ContainerButton.StylePseudoClassDisabled)
+                    .Prop(Control.StylePropertyModulateSelf, Color.White)
+                    .Prop(ContainerButton.StylePropertyStyleBox, glassButtonDisabled),
+
+                // MenuButton → accent-tinted
+                new StyleRule(
+                    new SelectorElement(typeof(MenuButton), null, null, new[] {Button.StylePseudoClassNormal}),
+                    new[] { new StyleProperty(Button.StylePropertyModulateSelf, Accent("#353745FF", 0.22f)) }),
+                new StyleRule(
+                    new SelectorElement(typeof(MenuButton), null, null, new[] {Button.StylePseudoClassHover}),
+                    new[] { new StyleProperty(Button.StylePropertyModulateSelf, Accent("#404354FF", 0.36f)) }),
+                new StyleRule(
+                    new SelectorElement(typeof(MenuButton), null, null, new[] {Button.StylePseudoClassPressed}),
+                    new[] { new StyleProperty(Button.StylePropertyModulateSelf, Accent("#2F313EFF", 0.30f)) }),
+
+                // Chat panel background → accent-tinted
+                new StyleRule(new SelectorElement(typeof(PanelContainer), new[] {StyleClassChatPanel}, null, null),
+                    new[] { new StyleProperty(PanelContainer.StylePropertyPanel, glassChatBg) }),
+                new StyleRule(new SelectorElement(typeof(PanelContainer), new[] {StyleClassChatSubPanel}, null, null),
+                    new[] { new StyleProperty(PanelContainer.StylePropertyPanel, glassChatSubBg) }),
+
+                // PDA backgrounds → accent-tinted
+                Element<PanelContainer>().Class("PdaContentBackground")
+                    .Prop(PanelContainer.StylePropertyPanel, glassSurfaceDark)
+                    .Prop(Control.StylePropertyModulateSelf, Color.White),
+                Element<PanelContainer>().Class("PdaBackground")
+                    .Prop(PanelContainer.StylePropertyPanel, glassPdaBg)
+                    .Prop(Control.StylePropertyModulateSelf, Color.White),
+
+                // MonotoneButton → accent-tinted
+                new StyleRule(
+                    new SelectorElement(typeof(MonotoneButton), null, null, null),
+                    new[] { new StyleProperty(Button.StylePropertyStyleBox, glassMonoBtnNormal) }),
+                new StyleRule(
+                    new SelectorElement(typeof(MonotoneButton), null, null, new[] { Button.StylePseudoClassPressed }),
+                    new[] { new StyleProperty(Button.StylePropertyStyleBox, glassMonoBtnPressed) }),
+
+                // Labels → accent-tinted heading colors
+                new StyleRule(new SelectorElement(typeof(Label), new[] {StyleClassLabelKeyText}, null, null), new[]
+                {
+                    new StyleProperty(Label.StylePropertyFont, notoSansBold12),
+                    new StyleProperty(Label.StylePropertyFontColor, accentLabelColor),
+                }),
+                new StyleRule(new SelectorElement(typeof(Label), new[] {StyleClassLabelHeading}, null, null), new[]
+                {
+                    new StyleProperty(Label.StylePropertyFont, notoSansBold16),
+                    new StyleProperty(Label.StylePropertyFontColor, accentHeadingColor),
+                }),
+                new StyleRule(new SelectorElement(typeof(Label), new[] {StyleClassLabelHeadingBigger}, null, null), new[]
+                {
+                    new StyleProperty(Label.StylePropertyFont, notoSansBold20),
+                    new StyleProperty(Label.StylePropertyFontColor, accentHeadingColor),
+                }),
+                new StyleRule(new SelectorElement(typeof(RichTextLabel), new[] {StyleClassLabelKeyText}, null, null), new[]
+                {
+                    new StyleProperty(Label.StylePropertyFont, notoSansBold12),
+                    new StyleProperty(Control.StylePropertyModulateSelf, accentLabelColor),
+                }),
+
+                // CheckBox textures → accent-tinted modulation
+                new StyleRule(new SelectorElement(typeof(TextureRect), new [] { CheckBox.StyleClassCheckBox }, null, null), new[]
+                {
+                    new StyleProperty(TextureRect.StylePropertyTexture, checkBoxTextureUnchecked),
+                    new StyleProperty(Control.StylePropertyModulateSelf, Accent("#8FA8C8FF", 0.30f)),
+                }),
+                new StyleRule(new SelectorElement(typeof(TextureRect), new [] { CheckBox.StyleClassCheckBox, CheckBox.StyleClassCheckBoxChecked }, null, null), new[]
+                {
+                    new StyleProperty(TextureRect.StylePropertyTexture, checkBoxTextureChecked),
+                    new StyleProperty(Control.StylePropertyModulateSelf, tonedAccent),
+                }),
+
+                // NanoHeading → accent-tinted
+                new StyleRule(
+                    new SelectorChild(
+                        SelectorElement.Type(typeof(NanoHeading)),
+                        SelectorElement.Type(typeof(PanelContainer))),
+                    new[]
+                    {
+                        new StyleProperty(PanelContainer.StylePropertyPanel, new StyleBoxTexture(nanoHeadingBox) { Modulate = Accent("#313A45F2", 0.35f) }),
+                    }),
+
+                // StripeBack → accent-tinted
+                new StyleRule(
+                    SelectorElement.Type(typeof(StripeBack)),
+                    new[]
+                    {
+                        new StyleProperty(StripeBack.StylePropertyBackground, new StyleBoxTexture(stripeBack) { Modulate = Accent("#29313CF2", 0.38f) }),
+                    }),
+
+                // Chat filter buttons → accent-tinted
+                new StyleRule(new SelectorElement(typeof(ContainerButton), new[] {StyleClassChatFilterOptionButton}, null, new[] {ContainerButton.StylePseudoClassNormal}), new[]
+                {
+                    new StyleProperty(Control.StylePropertyModulateSelf, Accent("#353745FF", 0.22f)),
+                }),
+                new StyleRule(new SelectorElement(typeof(ContainerButton), new[] {StyleClassChatFilterOptionButton}, null, new[] {ContainerButton.StylePseudoClassHover}), new[]
+                {
+                    new StyleProperty(Control.StylePropertyModulateSelf, Accent("#404354FF", 0.36f)),
+                }),
+                new StyleRule(new SelectorElement(typeof(ContainerButton), new[] {StyleClassChatFilterOptionButton}, null, new[] {ContainerButton.StylePseudoClassPressed}), new[]
+                {
+                    new StyleProperty(Control.StylePropertyModulateSelf, Accent("#2F313EFF", 0.30f)),
+                }),
+                new StyleRule(new SelectorElement(typeof(ContainerButton), new[] {StyleClassChatFilterOptionButton}, null, new[] {ContainerButton.StylePseudoClassDisabled}), new[]
+                {
+                    new StyleProperty(Control.StylePropertyModulateSelf, Accent("#2A2B36FF", 0.20f)),
+                }),
+
+                // StatusFieldTitle labels → accent-tinted
+                Element<Label>().Class("StatusFieldTitle")
+                    .Prop("font-color", accentLabelColor),
+
             }).ToList());
         }
     }
