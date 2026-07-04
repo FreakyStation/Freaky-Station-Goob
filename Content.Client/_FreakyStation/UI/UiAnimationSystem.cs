@@ -3,7 +3,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 using System.Collections.Generic;
-using Robust.Client.Animations;
 using Robust.Client.Graphics;
 using Robust.Client.UserInterface;
 using Robust.Client.UserInterface.Controls;
@@ -13,94 +12,31 @@ using Content.Client.UserInterface.Controls;
 namespace Content.Client._FreakyStation.UI;
 
 /// <summary>
-/// Animated UI transitions. Non-blocking — if anything fails, windows stay fully visible.
+/// Animated UI transitions. Non-blocking — windows always stay visible regardless of animation state.
 /// </summary>
 public sealed class UiAnimationSystem : EntitySystem
 {
     [Dependency] private readonly IUserInterfaceManager _uiManager = default!;
 
+    // Entrance animation tracking — manual interpolation, no PlayAnimation
+    private readonly Dictionary<Control, float> _entranceAnims = new();
+    private readonly List<Control> _entranceDone = new();
+
+    // Pulse tracking
     private readonly Dictionary<Control, float> _pulsingControls = new();
     private readonly List<Control> _pulseRemove = new();
 
     private const float EntranceDuration = 0.25f;
-    private const float HoverDuration = 0.12f;
-    private const float ClickDuration = 0.15f;
     private const float PulsePeriod = 1.6f;
 
+    // Hover/click use PlayAnimation with try-catch — they're non-critical
     private const string HoverKey = "freaky-hover";
     private const string ClickKey = "freaky-click";
-    private const string EntranceKey = "freaky-entrance";
+    private const float HoverDuration = 0.12f;
+    private const float ClickDuration = 0.15f;
 
     private static readonly Color HoverTint = new(0.88f, 0.88f, 0.88f, 1f);
     private static readonly Color PressTint = new(0.78f, 0.78f, 0.78f, 1f);
-
-    private static readonly Animation EntranceAnim = new()
-    {
-        Length = TimeSpan.FromSeconds(EntranceDuration),
-        AnimationTracks =
-        {
-            new AnimationTrackControlProperty
-            {
-                Property = "Modulate",
-                KeyFrames =
-                {
-                    new AnimationTrackProperty.KeyFrame(Color.White.WithAlpha(0f), 0f),
-                    new AnimationTrackProperty.KeyFrame(Color.White, EntranceDuration),
-                }
-            },
-        }
-    };
-
-    private static readonly Animation HoverInAnim = new()
-    {
-        Length = TimeSpan.FromSeconds(HoverDuration),
-        AnimationTracks =
-        {
-            new AnimationTrackControlProperty
-            {
-                Property = "Modulate",
-                KeyFrames =
-                {
-                    new AnimationTrackProperty.KeyFrame(Color.White, 0f),
-                    new AnimationTrackProperty.KeyFrame(HoverTint, HoverDuration),
-                }
-            },
-        }
-    };
-
-    private static readonly Animation HoverOutAnim = new()
-    {
-        Length = TimeSpan.FromSeconds(HoverDuration),
-        AnimationTracks =
-        {
-            new AnimationTrackControlProperty
-            {
-                Property = "Modulate",
-                KeyFrames =
-                {
-                    new AnimationTrackProperty.KeyFrame(HoverTint, 0f),
-                    new AnimationTrackProperty.KeyFrame(Color.White, HoverDuration),
-                }
-            },
-        }
-    };
-
-    private static readonly Animation ClickPopAnim = new()
-    {
-        Length = TimeSpan.FromSeconds(ClickDuration),
-        AnimationTracks =
-        {
-            new AnimationTrackControlProperty
-            {
-                Property = "Modulate",
-                KeyFrames =
-                {
-                    new AnimationTrackProperty.KeyFrame(PressTint, 0f),
-                    new AnimationTrackProperty.KeyFrame(Color.White, ClickDuration),
-                }
-            },
-        }
-    };
 
     public override void Initialize()
     {
@@ -111,6 +47,7 @@ public sealed class UiAnimationSystem : EntitySystem
     public override void Update(float frameTime)
     {
         base.Update(frameTime);
+        UpdateEntrance(frameTime);
         UpdatePulse(frameTime);
     }
 
@@ -122,27 +59,43 @@ public sealed class UiAnimationSystem : EntitySystem
 
     private void OnWindowChildAdded(Control child)
     {
-        // Only animate DefaultWindow and FancyWindow
         if (child is not (DefaultWindow or FancyWindow))
             return;
 
-        try
+        // Start manual fade-in — set transparent immediately (before first render)
+        child.Modulate = Color.White.WithAlpha(0f);
+        _entranceAnims[child] = 0f;
+    }
+
+    private void UpdateEntrance(float frameTime)
+    {
+        foreach (var (control, elapsed) in _entranceAnims)
         {
-            child.StopAnimation(EntranceKey);
-            child.Modulate = Color.White.WithAlpha(0f);
-            child.PlayAnimation(EntranceAnim, EntranceKey);
-            // Safety: if animation doesn't complete for any reason, force-reset after duration
-            Timer.Spawn(TimeSpan.FromSeconds(EntranceDuration + 0.1f), () =>
+            if (control.Disposed)
             {
-                if (!child.Disposed && child.Modulate != Color.White)
-                    child.Modulate = Color.White;
-            });
+                _entranceDone.Add(control);
+                continue;
+            }
+
+            var t = Math.Min(elapsed / EntranceDuration, 1f);
+            // Ease-out-cubic
+            var eased = 1f - MathF.Pow(1f - t, 3f);
+            control.Modulate = new Color(1f, 1f, 1f, eased);
+
+            if (t >= 1f)
+            {
+                control.Modulate = Color.White;
+                _entranceDone.Add(control);
+            }
+            else
+            {
+                _entranceAnims[control] = elapsed + frameTime;
+            }
         }
-        catch
-        {
-            // Never block window opening — if animation fails, force visible
-            child.Modulate = Color.White;
-        }
+
+        foreach (var control in _entranceDone)
+            _entranceAnims.Remove(control);
+        _entranceDone.Clear();
     }
 
     private void UpdatePulse(float frameTime)
@@ -174,7 +127,22 @@ public sealed class UiAnimationSystem : EntitySystem
         try
         {
             control.StopAnimation(HoverKey);
-            control.PlayAnimation(HoverInAnim, HoverKey);
+            control.PlayAnimation(new Robust.Client.Animations.Animation
+            {
+                Length = TimeSpan.FromSeconds(HoverDuration),
+                AnimationTracks =
+                {
+                    new Robust.Client.Animations.AnimationTrackControlProperty
+                    {
+                        Property = "Modulate",
+                        KeyFrames =
+                        {
+                            new Robust.Client.Animations.AnimationTrackProperty.KeyFrame(Color.White, 0f),
+                            new Robust.Client.Animations.AnimationTrackProperty.KeyFrame(HoverTint, HoverDuration),
+                        }
+                    },
+                }
+            }, HoverKey);
         }
         catch { /* ignore */ }
     }
@@ -186,7 +154,22 @@ public sealed class UiAnimationSystem : EntitySystem
         try
         {
             control.StopAnimation(HoverKey);
-            control.PlayAnimation(HoverOutAnim, HoverKey);
+            control.PlayAnimation(new Robust.Client.Animations.Animation
+            {
+                Length = TimeSpan.FromSeconds(HoverDuration),
+                AnimationTracks =
+                {
+                    new Robust.Client.Animations.AnimationTrackControlProperty
+                    {
+                        Property = "Modulate",
+                        KeyFrames =
+                        {
+                            new Robust.Client.Animations.AnimationTrackProperty.KeyFrame(HoverTint, 0f),
+                            new Robust.Client.Animations.AnimationTrackProperty.KeyFrame(Color.White, HoverDuration),
+                        }
+                    },
+                }
+            }, HoverKey);
         }
         catch { /* ignore */ }
     }
@@ -198,7 +181,22 @@ public sealed class UiAnimationSystem : EntitySystem
         try
         {
             control.StopAnimation(ClickKey);
-            control.PlayAnimation(ClickPopAnim, ClickKey);
+            control.PlayAnimation(new Robust.Client.Animations.Animation
+            {
+                Length = TimeSpan.FromSeconds(ClickDuration),
+                AnimationTracks =
+                {
+                    new Robust.Client.Animations.AnimationTrackControlProperty
+                    {
+                        Property = "Modulate",
+                        KeyFrames =
+                        {
+                            new Robust.Client.Animations.AnimationTrackProperty.KeyFrame(PressTint, 0f),
+                            new Robust.Client.Animations.AnimationTrackProperty.KeyFrame(Color.White, ClickDuration),
+                        }
+                    },
+                }
+            }, ClickKey);
         }
         catch { /* ignore */ }
     }
