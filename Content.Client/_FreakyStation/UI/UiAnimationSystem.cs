@@ -13,14 +13,7 @@ using Content.Client.UserInterface.Controls;
 namespace Content.Client._FreakyStation.UI;
 
 /// <summary>
-/// Animated UI transitions using RobustToolbox's built-in Animation system.
-/// <list type="bullet">
-/// <item>Window entrance: fade-in from transparent (300ms) — hooked via WindowRoot.OnChildAdded for zero-latency</item>
-/// <item>Button hover: smooth modulate dim/brighten (120ms)</item>
-/// <item>Click pop: quick dim-and-release (150ms)</item>
-/// <item>Accent pulse: sine-wave modulate oscillation for highlighted elements</item>
-/// </list>
-/// Only applies to <see cref="DefaultWindow"/> and <see cref="FancyWindow"/>.
+/// Animated UI transitions. Non-blocking — if anything fails, windows stay fully visible.
 /// </summary>
 public sealed class UiAnimationSystem : EntitySystem
 {
@@ -28,9 +21,8 @@ public sealed class UiAnimationSystem : EntitySystem
 
     private readonly Dictionary<Control, float> _pulsingControls = new();
     private readonly List<Control> _pulseRemove = new();
-    private bool _hooked;
 
-    private const float EntranceDuration = 0.30f;
+    private const float EntranceDuration = 0.25f;
     private const float HoverDuration = 0.12f;
     private const float ClickDuration = 0.15f;
     private const float PulsePeriod = 1.6f;
@@ -110,19 +102,10 @@ public sealed class UiAnimationSystem : EntitySystem
         }
     };
 
-    private static bool IsFullWindow(Control control)
-    {
-        return control is DefaultWindow or FancyWindow;
-    }
-
     public override void Initialize()
     {
         base.Initialize();
-
-        // Hook into WindowRoot.OnChildAdded — fires synchronously when a window is added,
-        // before it gets rendered. This prevents the 1-frame flash.
         _uiManager.WindowRoot.OnChildAdded += OnWindowChildAdded;
-        _hooked = true;
     }
 
     public override void Update(float frameTime)
@@ -134,21 +117,32 @@ public sealed class UiAnimationSystem : EntitySystem
     public override void Shutdown()
     {
         base.Shutdown();
-        if (_hooked)
-        {
-            _uiManager.WindowRoot.OnChildAdded -= OnWindowChildAdded;
-            _hooked = false;
-        }
+        _uiManager.WindowRoot.OnChildAdded -= OnWindowChildAdded;
     }
 
     private void OnWindowChildAdded(Control child)
     {
-        if (!IsFullWindow(child))
+        // Only animate DefaultWindow and FancyWindow
+        if (child is not (DefaultWindow or FancyWindow))
             return;
 
-        // Set transparent immediately — before first render
-        child.Modulate = Color.White.WithAlpha(0f);
-        child.PlayAnimation(EntranceAnim, EntranceKey);
+        try
+        {
+            child.StopAnimation(EntranceKey);
+            child.Modulate = Color.White.WithAlpha(0f);
+            child.PlayAnimation(EntranceAnim, EntranceKey);
+            // Safety: if animation doesn't complete for any reason, force-reset after duration
+            Timer.Spawn(TimeSpan.FromSeconds(EntranceDuration + 0.1f), () =>
+            {
+                if (!child.Disposed && child.Modulate != Color.White)
+                    child.Modulate = Color.White;
+            });
+        }
+        catch
+        {
+            // Never block window opening — if animation fails, force visible
+            child.Modulate = Color.White;
+        }
     }
 
     private void UpdatePulse(float frameTime)
@@ -177,24 +171,36 @@ public sealed class UiAnimationSystem : EntitySystem
     {
         if (control.Disposed)
             return;
-        control.StopAnimation(HoverKey);
-        control.PlayAnimation(HoverInAnim, HoverKey);
+        try
+        {
+            control.StopAnimation(HoverKey);
+            control.PlayAnimation(HoverInAnim, HoverKey);
+        }
+        catch { /* ignore */ }
     }
 
     public static void AnimateHoverOut(Control control)
     {
         if (control.Disposed)
             return;
-        control.StopAnimation(HoverKey);
-        control.PlayAnimation(HoverOutAnim, HoverKey);
+        try
+        {
+            control.StopAnimation(HoverKey);
+            control.PlayAnimation(HoverOutAnim, HoverKey);
+        }
+        catch { /* ignore */ }
     }
 
     public static void AnimateClickPop(Control control)
     {
         if (control.Disposed)
             return;
-        control.StopAnimation(ClickKey);
-        control.PlayAnimation(ClickPopAnim, ClickKey);
+        try
+        {
+            control.StopAnimation(ClickKey);
+            control.PlayAnimation(ClickPopAnim, ClickKey);
+        }
+        catch { /* ignore */ }
     }
 
     public void StartPulse(Control control)
