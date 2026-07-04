@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using Robust.Client.Animations;
 using Robust.Client.Graphics;
 using Robust.Client.UserInterface;
+using Robust.Client.UserInterface.Controls;
 using Robust.Client.UserInterface.CustomControls;
 
 namespace Content.Client._FreakyStation.UI;
@@ -13,11 +14,13 @@ namespace Content.Client._FreakyStation.UI;
 /// <summary>
 /// Animated UI transitions using RobustToolbox's built-in Animation system.
 /// <list type="bullet">
-/// <item>Window entrance: fade-in from transparent (220ms)</item>
+/// <item>Window entrance: fade-in from transparent (300ms)</item>
 /// <item>Button hover: smooth modulate dim/brighten (120ms)</item>
 /// <item>Click pop: quick dim-and-release (150ms)</item>
 /// <item>Accent pulse: sine-wave modulate oscillation for highlighted elements</item>
 /// </list>
+/// Only applies to <see cref="DefaultWindow"/> and <see cref="FancyWindow"/> —
+/// lightweight popup-like <see cref="BaseWindow"/> subclasses are left alone.
 /// </summary>
 public sealed class UiAnimationSystem : EntitySystem
 {
@@ -27,7 +30,7 @@ public sealed class UiAnimationSystem : EntitySystem
     private readonly Dictionary<Control, float> _pulsingControls = new();
     private readonly List<Control> _pulseRemove = new();
 
-    private const float EntranceDuration = 0.22f;
+    private const float EntranceDuration = 0.30f;
     private const float HoverDuration = 0.12f;
     private const float ClickDuration = 0.15f;
     private const float PulsePeriod = 1.6f;
@@ -36,9 +39,7 @@ public sealed class UiAnimationSystem : EntitySystem
     private const string ClickKey = "freaky-click";
     private const string EntranceKey = "freaky-entrance";
 
-    // Slight tint for hover state — subtle cool darken
     private static readonly Color HoverTint = new(0.88f, 0.88f, 0.88f, 1f);
-    // Stronger dim for click press
     private static readonly Color PressTint = new(0.78f, 0.78f, 0.78f, 1f);
 
     private static readonly Animation EntranceAnim = new()
@@ -109,6 +110,15 @@ public sealed class UiAnimationSystem : EntitySystem
         }
     };
 
+    /// <summary>
+    /// Check if a control is a "full" window that should get entrance animations.
+    /// Excludes lightweight popup-like windows.
+    /// </summary>
+    private static bool IsFullWindow(Control control)
+    {
+        return control is DefaultWindow or FancyWindow;
+    }
+
     public override void Update(float frameTime)
     {
         base.Update(frameTime);
@@ -120,15 +130,15 @@ public sealed class UiAnimationSystem : EntitySystem
     {
         foreach (var child in _uiManager.WindowRoot.Children)
         {
-            if (child is not BaseWindow window)
+            if (!IsFullWindow(child))
                 continue;
 
-            if (!_seenWindows.Add(window))
+            if (!_seenWindows.Add(child))
                 continue;
 
             // Entrance: fade-in from transparent
-            window.Modulate = Color.White.WithAlpha(0f);
-            window.PlayAnimation(EntranceAnim, EntranceKey);
+            child.Modulate = Color.White.WithAlpha(0f);
+            child.PlayAnimation(EntranceAnim, EntranceKey);
         }
 
         _seenWindows.RemoveWhere(c => c.Disposed);
@@ -147,7 +157,6 @@ public sealed class UiAnimationSystem : EntitySystem
             var t = (phase + frameTime) % PulsePeriod;
             _pulsingControls[control] = t;
 
-            // Sine-wave pulse: modulate oscillates 0.7 → 1.0 → 0.7
             var pulse = 0.85f + 0.15f * MathF.Sin(t * MathF.Tau / PulsePeriod);
             control.Modulate = new Color(pulse, pulse, pulse, 1f);
         }
@@ -157,10 +166,6 @@ public sealed class UiAnimationSystem : EntitySystem
         _pulseRemove.Clear();
     }
 
-    /// <summary>
-    /// Smooth hover-in animation for any button-like control.
-    /// Call on mouse enter.
-    /// </summary>
     public static void AnimateHoverIn(Control control)
     {
         if (control.Disposed)
@@ -169,10 +174,6 @@ public sealed class UiAnimationSystem : EntitySystem
         control.PlayAnimation(HoverInAnim, HoverKey);
     }
 
-    /// <summary>
-    /// Smooth hover-out animation for any button-like control.
-    /// Call on mouse leave.
-    /// </summary>
     public static void AnimateHoverOut(Control control)
     {
         if (control.Disposed)
@@ -181,9 +182,6 @@ public sealed class UiAnimationSystem : EntitySystem
         control.PlayAnimation(HoverOutAnim, HoverKey);
     }
 
-    /// <summary>
-    /// Quick pop animation for button clicks — dim then release.
-    /// </summary>
     public static void AnimateClickPop(Control control)
     {
         if (control.Disposed)
@@ -192,10 +190,6 @@ public sealed class UiAnimationSystem : EntitySystem
         control.PlayAnimation(ClickPopAnim, ClickKey);
     }
 
-    /// <summary>
-    /// Add a subtle pulsing glow to a control (important buttons, notifications).
-    /// The control's Modulate oscillates via sine wave until stopped.
-    /// </summary>
     public void StartPulse(Control control)
     {
         if (control.Disposed)
@@ -203,9 +197,6 @@ public sealed class UiAnimationSystem : EntitySystem
         _pulsingControls[control] = 0f;
     }
 
-    /// <summary>
-    /// Stop pulsing a control and reset its modulate.
-    /// </summary>
     public void StopPulse(Control control)
     {
         if (_pulsingControls.Remove(control))

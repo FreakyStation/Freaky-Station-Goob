@@ -10,9 +10,9 @@ using Robust.Client.UserInterface.CustomControls;
 namespace Content.Client._FreakyStation.UI;
 
 /// <summary>
-/// Scans the UI tree for <see cref="BaseButton"/> instances and attaches
+/// Scans the UI tree for <see cref="BaseButton"/> instances inside
+/// <see cref="DefaultWindow"/> and <see cref="FancyWindow"/> and attaches
 /// hover/click animation hooks from <see cref="UiAnimationSystem"/>.
-/// Runs on a light interval — checks for new buttons in newly opened windows.
 /// </summary>
 public sealed class UiAnimationHookSystem : EntitySystem
 {
@@ -37,11 +37,16 @@ public sealed class UiAnimationHookSystem : EntitySystem
         CleanDisposed();
     }
 
+    private static bool IsFullWindow(Control control)
+    {
+        return control is DefaultWindow or FancyWindow;
+    }
+
     private void ScanForNewButtons()
     {
         foreach (var child in _ui.WindowRoot.Children)
         {
-            if (child is not BaseWindow)
+            if (!IsFullWindow(child))
                 continue;
 
             if (!_scannedWindows.Add(child))
