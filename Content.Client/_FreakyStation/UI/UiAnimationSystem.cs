@@ -131,7 +131,7 @@ public sealed class UiAnimationSystem : EntitySystem
         UpdatePulse(frameTime);
     }
 
-    protected override void Shutdown()
+    public override void Shutdown()
     {
         base.Shutdown();
         if (_hooked)
