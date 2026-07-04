@@ -13,7 +13,7 @@ namespace Content.Client._FreakyStation.UI;
 /// <summary>
 /// Animated UI transitions using RobustToolbox's built-in Animation system.
 /// <list type="bullet">
-/// <item>Window entrance: fade-in from transparent (220ms, ease-out via linear interpolation)</item>
+/// <item>Window entrance: fade-in from transparent (220ms)</item>
 /// <item>Button hover: smooth modulate dim/brighten (120ms)</item>
 /// <item>Click pop: quick dim-and-release (150ms)</item>
 /// <item>Accent pulse: sine-wave modulate oscillation for highlighted elements</item>
@@ -31,6 +31,10 @@ public sealed class UiAnimationSystem : EntitySystem
     private const float HoverDuration = 0.12f;
     private const float ClickDuration = 0.15f;
     private const float PulsePeriod = 1.6f;
+
+    private const string HoverKey = "freaky-hover";
+    private const string ClickKey = "freaky-click";
+    private const string EntranceKey = "freaky-entrance";
 
     // Slight tint for hover state — subtle cool darken
     private static readonly Color HoverTint = new(0.88f, 0.88f, 0.88f, 1f);
@@ -124,7 +128,7 @@ public sealed class UiAnimationSystem : EntitySystem
 
             // Entrance: fade-in from transparent
             window.Modulate = Color.White.WithAlpha(0f);
-            window.PlayAnimation(EntranceAnim, "freaky-entrance");
+            window.PlayAnimation(EntranceAnim, EntranceKey);
         }
 
         _seenWindows.RemoveWhere(c => c.Disposed);
@@ -161,7 +165,8 @@ public sealed class UiAnimationSystem : EntitySystem
     {
         if (control.Disposed)
             return;
-        control.PlayAnimation(HoverInAnim, "freaky-hover");
+        control.StopAnimation(HoverKey);
+        control.PlayAnimation(HoverInAnim, HoverKey);
     }
 
     /// <summary>
@@ -172,7 +177,8 @@ public sealed class UiAnimationSystem : EntitySystem
     {
         if (control.Disposed)
             return;
-        control.PlayAnimation(HoverOutAnim, "freaky-hover");
+        control.StopAnimation(HoverKey);
+        control.PlayAnimation(HoverOutAnim, HoverKey);
     }
 
     /// <summary>
@@ -182,7 +188,8 @@ public sealed class UiAnimationSystem : EntitySystem
     {
         if (control.Disposed)
             return;
-        control.PlayAnimation(ClickPopAnim, "freaky-click");
+        control.StopAnimation(ClickKey);
+        control.PlayAnimation(ClickPopAnim, ClickKey);
     }
 
     /// <summary>
