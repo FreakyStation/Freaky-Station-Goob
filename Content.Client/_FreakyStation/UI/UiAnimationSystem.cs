@@ -15,21 +15,20 @@ namespace Content.Client._FreakyStation.UI;
 /// <summary>
 /// Animated UI transitions using RobustToolbox's built-in Animation system.
 /// <list type="bullet">
-/// <item>Window entrance: fade-in from transparent (300ms)</item>
+/// <item>Window entrance: fade-in from transparent (300ms) — hooked via WindowRoot.OnChildAdded for zero-latency</item>
 /// <item>Button hover: smooth modulate dim/brighten (120ms)</item>
 /// <item>Click pop: quick dim-and-release (150ms)</item>
 /// <item>Accent pulse: sine-wave modulate oscillation for highlighted elements</item>
 /// </list>
-/// Only applies to <see cref="DefaultWindow"/> and <see cref="FancyWindow"/> —
-/// lightweight popup-like <see cref="BaseWindow"/> subclasses are left alone.
+/// Only applies to <see cref="DefaultWindow"/> and <see cref="FancyWindow"/>.
 /// </summary>
 public sealed class UiAnimationSystem : EntitySystem
 {
     [Dependency] private readonly IUserInterfaceManager _uiManager = default!;
 
-    private readonly HashSet<Control> _seenWindows = new();
     private readonly Dictionary<Control, float> _pulsingControls = new();
     private readonly List<Control> _pulseRemove = new();
+    private bool _hooked;
 
     private const float EntranceDuration = 0.30f;
     private const float HoverDuration = 0.12f;
@@ -111,38 +110,45 @@ public sealed class UiAnimationSystem : EntitySystem
         }
     };
 
-    /// <summary>
-    /// Check if a control is a "full" window that should get entrance animations.
-    /// Excludes lightweight popup-like windows.
-    /// </summary>
     private static bool IsFullWindow(Control control)
     {
         return control is DefaultWindow or FancyWindow;
     }
 
+    public override void Initialize()
+    {
+        base.Initialize();
+
+        // Hook into WindowRoot.OnChildAdded — fires synchronously when a window is added,
+        // before it gets rendered. This prevents the 1-frame flash.
+        _uiManager.WindowRoot.OnChildAdded += OnWindowChildAdded;
+        _hooked = true;
+    }
+
     public override void Update(float frameTime)
     {
         base.Update(frameTime);
-        DetectNewWindows();
         UpdatePulse(frameTime);
     }
 
-    private void DetectNewWindows()
+    protected override void Shutdown()
     {
-        foreach (var child in _uiManager.WindowRoot.Children)
+        base.Shutdown();
+        if (_hooked)
         {
-            if (!IsFullWindow(child))
-                continue;
-
-            if (!_seenWindows.Add(child))
-                continue;
-
-            // Entrance: fade-in from transparent
-            child.Modulate = Color.White.WithAlpha(0f);
-            child.PlayAnimation(EntranceAnim, EntranceKey);
+            _uiManager.WindowRoot.OnChildAdded -= OnWindowChildAdded;
+            _hooked = false;
         }
+    }
 
-        _seenWindows.RemoveWhere(c => c.Disposed);
+    private void OnWindowChildAdded(Control child)
+    {
+        if (!IsFullWindow(child))
+            return;
+
+        // Set transparent immediately — before first render
+        child.Modulate = Color.White.WithAlpha(0f);
+        child.PlayAnimation(EntranceAnim, EntranceKey);
     }
 
     private void UpdatePulse(float frameTime)
