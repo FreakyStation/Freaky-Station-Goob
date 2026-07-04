@@ -3,6 +3,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 using System.Collections.Generic;
+using Robust.Client.Animations;
 using Robust.Client.Graphics;
 using Robust.Client.UserInterface;
 using Robust.Client.UserInterface.CustomControls;
@@ -10,86 +11,197 @@ using Robust.Client.UserInterface.CustomControls;
 namespace Content.Client._FreakyStation.UI;
 
 /// <summary>
-/// Applies entrance animations to UI controls.
-/// Interpolates <see cref="Control.Modulate"/> alpha each frame for a smooth fade-in.
-/// Detects newly opened <see cref="BaseWindow"/> instances automatically.
+/// Animated UI transitions using RobustToolbox's built-in Animation system.
+/// <list type="bullet">
+/// <item>Window entrance: fade-in from transparent (220ms, ease-out via linear interpolation)</item>
+/// <item>Button hover: smooth modulate dim/brighten (120ms)</item>
+/// <item>Click pop: quick dim-and-release (150ms)</item>
+/// <item>Accent pulse: sine-wave modulate oscillation for highlighted elements</item>
+/// </list>
 /// </summary>
 public sealed class UiAnimationSystem : EntitySystem
 {
     [Dependency] private readonly IUserInterfaceManager _uiManager = default!;
 
     private readonly HashSet<Control> _seenWindows = new();
-    private readonly Dictionary<Control, float> _activeAnims = new();
-    private readonly List<Control> _removeQueue = new();
+    private readonly Dictionary<Control, float> _pulsingControls = new();
+    private readonly List<Control> _pulseRemove = new();
 
-    private const float DefaultDuration = 0.22f;
+    private const float EntranceDuration = 0.22f;
+    private const float HoverDuration = 0.12f;
+    private const float ClickDuration = 0.15f;
+    private const float PulsePeriod = 1.6f;
+
+    // Slight tint for hover state — subtle cool darken
+    private static readonly Color HoverTint = new(0.88f, 0.88f, 0.88f, 1f);
+    // Stronger dim for click press
+    private static readonly Color PressTint = new(0.78f, 0.78f, 0.78f, 1f);
+
+    private static readonly Animation EntranceAnim = new()
+    {
+        Length = TimeSpan.FromSeconds(EntranceDuration),
+        AnimationTracks =
+        {
+            new AnimationTrackControlProperty
+            {
+                Property = "Modulate",
+                KeyFrames =
+                {
+                    new AnimationTrackProperty.KeyFrame(Color.White.WithAlpha(0f), 0f),
+                    new AnimationTrackProperty.KeyFrame(Color.White, EntranceDuration),
+                }
+            },
+        }
+    };
+
+    private static readonly Animation HoverInAnim = new()
+    {
+        Length = TimeSpan.FromSeconds(HoverDuration),
+        AnimationTracks =
+        {
+            new AnimationTrackControlProperty
+            {
+                Property = "Modulate",
+                KeyFrames =
+                {
+                    new AnimationTrackProperty.KeyFrame(Color.White, 0f),
+                    new AnimationTrackProperty.KeyFrame(HoverTint, HoverDuration),
+                }
+            },
+        }
+    };
+
+    private static readonly Animation HoverOutAnim = new()
+    {
+        Length = TimeSpan.FromSeconds(HoverDuration),
+        AnimationTracks =
+        {
+            new AnimationTrackControlProperty
+            {
+                Property = "Modulate",
+                KeyFrames =
+                {
+                    new AnimationTrackProperty.KeyFrame(HoverTint, 0f),
+                    new AnimationTrackProperty.KeyFrame(Color.White, HoverDuration),
+                }
+            },
+        }
+    };
+
+    private static readonly Animation ClickPopAnim = new()
+    {
+        Length = TimeSpan.FromSeconds(ClickDuration),
+        AnimationTracks =
+        {
+            new AnimationTrackControlProperty
+            {
+                Property = "Modulate",
+                KeyFrames =
+                {
+                    new AnimationTrackProperty.KeyFrame(PressTint, 0f),
+                    new AnimationTrackProperty.KeyFrame(Color.White, ClickDuration),
+                }
+            },
+        }
+    };
 
     public override void Update(float frameTime)
     {
         base.Update(frameTime);
-
         DetectNewWindows();
-        UpdateAnimations(frameTime);
+        UpdatePulse(frameTime);
     }
 
     private void DetectNewWindows()
     {
         foreach (var child in _uiManager.WindowRoot.Children)
         {
-            if (child is not BaseWindow)
+            if (child is not BaseWindow window)
                 continue;
 
-            if (!_seenWindows.Add(child))
+            if (!_seenWindows.Add(window))
                 continue;
 
-            // New window — start fade-in
-            _activeAnims[child] = 0f;
-            child.Modulate = new Color(1f, 1f, 1f, 0f);
+            // Entrance: fade-in from transparent
+            window.Modulate = Color.White.WithAlpha(0f);
+            window.PlayAnimation(EntranceAnim, "freaky-entrance");
         }
 
         _seenWindows.RemoveWhere(c => c.Disposed);
     }
 
-    private void UpdateAnimations(float frameTime)
+    private void UpdatePulse(float frameTime)
     {
-        foreach (var (control, elapsed) in _activeAnims)
+        foreach (var (control, phase) in _pulsingControls)
         {
             if (control.Disposed)
             {
-                _removeQueue.Add(control);
+                _pulseRemove.Add(control);
                 continue;
             }
 
-            var t = Math.Min(elapsed / DefaultDuration, 1f);
-            // Ease-out-cubic
-            var eased = 1f - MathF.Pow(1f - t, 3f);
+            var t = (phase + frameTime) % PulsePeriod;
+            _pulsingControls[control] = t;
 
-            control.Modulate = new Color(1f, 1f, 1f, eased);
-
-            if (t >= 1f)
-            {
-                control.Modulate = Color.White;
-                _removeQueue.Add(control);
-            }
-            else
-            {
-                _activeAnims[control] = elapsed + frameTime;
-            }
+            // Sine-wave pulse: modulate oscillates 0.7 → 1.0 → 0.7
+            var pulse = 0.85f + 0.15f * MathF.Sin(t * MathF.Tau / PulsePeriod);
+            control.Modulate = new Color(pulse, pulse, pulse, 1f);
         }
 
-        foreach (var control in _removeQueue)
-            _activeAnims.Remove(control);
-        _removeQueue.Clear();
+        foreach (var control in _pulseRemove)
+            _pulsingControls.Remove(control);
+        _pulseRemove.Clear();
     }
 
     /// <summary>
-    /// Trigger a fade-in on any arbitrary control (popups, tooltips, etc.).
+    /// Smooth hover-in animation for any button-like control.
+    /// Call on mouse enter.
     /// </summary>
-    public void FadeIn(Control control)
+    public static void AnimateHoverIn(Control control)
     {
         if (control.Disposed)
             return;
-        _activeAnims[control] = 0f;
-        control.Modulate = new Color(1f, 1f, 1f, 0f);
+        control.PlayAnimation(HoverInAnim, "freaky-hover");
+    }
+
+    /// <summary>
+    /// Smooth hover-out animation for any button-like control.
+    /// Call on mouse leave.
+    /// </summary>
+    public static void AnimateHoverOut(Control control)
+    {
+        if (control.Disposed)
+            return;
+        control.PlayAnimation(HoverOutAnim, "freaky-hover");
+    }
+
+    /// <summary>
+    /// Quick pop animation for button clicks — dim then release.
+    /// </summary>
+    public static void AnimateClickPop(Control control)
+    {
+        if (control.Disposed)
+            return;
+        control.PlayAnimation(ClickPopAnim, "freaky-click");
+    }
+
+    /// <summary>
+    /// Add a subtle pulsing glow to a control (important buttons, notifications).
+    /// The control's Modulate oscillates via sine wave until stopped.
+    /// </summary>
+    public void StartPulse(Control control)
+    {
+        if (control.Disposed)
+            return;
+        _pulsingControls[control] = 0f;
+    }
+
+    /// <summary>
+    /// Stop pulsing a control and reset its modulate.
+    /// </summary>
+    public void StopPulse(Control control)
+    {
+        if (_pulsingControls.Remove(control))
+            control.Modulate = Color.White;
     }
 }
